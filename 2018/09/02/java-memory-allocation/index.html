@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Java 内存分配策略 | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述学习完了 Java 内存回收策略，我们在调过头来学习一下内存分配策略。内存分配策略大方向就是向怼上进行分配（但可能经过 JIT 编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的 Eden 区，如果启动了本地线程分配缓冲，将按线程优先分配在 TLAB 上分配。少数情况下也可能会直接分配在老年代中，分配到规则并不是百分之百固定的，其细节取决于当前使用的哪一块垃圾收集器组合，还有虚拟">
+<meta name="keywords" content="Java,JVM,GC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 内存分配策略">
+<meta property="og:url" content="http://blog.zhangyong.io/2018/09/02/java-memory-allocation/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="概述学习完了 Java 内存回收策略，我们在调过头来学习一下内存分配策略。内存分配策略大方向就是向怼上进行分配（但可能经过 JIT 编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的 Eden 区，如果启动了本地线程分配缓冲，将按线程优先分配在 TLAB 上分配。少数情况下也可能会直接分配在老年代中，分配到规则并不是百分之百固定的，其细节取决于当前使用的哪一块垃圾收集器组合，还有虚拟">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-09T07:40:19.094Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 内存分配策略">
+<meta name="twitter:description" content="概述学习完了 Java 内存回收策略，我们在调过头来学习一下内存分配策略。内存分配策略大方向就是向怼上进行分配（但可能经过 JIT 编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的 Eden 区，如果启动了本地线程分配缓冲，将按线程优先分配在 TLAB 上分配。少数情况下也可能会直接分配在老年代中，分配到规则并不是百分之百固定的，其细节取决于当前使用的哪一块垃圾收集器组合，还有虚拟">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-java-memory-allocation" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2018/09/02/java-memory-allocation/">
+    	Java 内存分配策略
+    </a>
+  </h2>
+	<time>
+	  Sep 2, 2018
+	</time>
+	
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
+
+	
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+ 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则"><span class="toc-number">2.</span> <span class="toc-text">规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象优先先-Eden-分配"><span class="toc-number">2.1.</span> <span class="toc-text">对象优先先 Eden 分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大对象直接进入老年代"><span class="toc-number">2.2.</span> <span class="toc-text">大对象直接进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长期存活的对象将进入老年代"><span class="toc-number">2.3.</span> <span class="toc-text">长期存活的对象将进入老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#空间分配担保"><span class="toc-number">2.4.</span> <span class="toc-text">空间分配担保</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>学习完了 Java 内存回收策略，我们在调过头来学习一下内存分配策略。内存分配策略大方向就是向怼上进行分配（但可能经过 JIT 编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的 Eden 区，如果启动了本地线程分配缓冲，将按线程优先分配在 TLAB 上分配。少数情况下也可能会直接分配在老年代中，分配到规则并不是百分之百固定的，其细节取决于当前使用的哪一块垃圾收集器组合，还有虚拟机中与内存相关的参数设置。</p>
+<a id="more"></a>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><h3 id="对象优先先-Eden-分配"><a href="#对象优先先-Eden-分配" class="headerlink" title="对象优先先 Eden 分配"></a>对象优先先 Eden 分配</h3><p>大多数情况下，对象在新生代 Eden 区分配。当 Eden 区没有足够空间进行分配时，虚拟机将发起一次 Minor GC。</p>
+<blockquote>
+<p>Minor GC 与 Full GC 的区别</p>
+</blockquote>
+<blockquote>
+<p>新生代 GC （Minor GC）：指发生在新生代的垃圾回收动作，因为 Java 对象大多都是具备朝生夕灭的特性，所以 Minor GC 非常频繁，一般回收速度也比较快。</p>
+</blockquote>
+<blockquote>
+<p>老年代 GC（Major GC/Full GC）：指发生在老年的 GC，出现了 Major GC，经常会伴随至少一次 Minor GC（但非绝对的，在 Parallel Scavenge 收集器的收集策略里就有直接进行 Major GC 的策略选择过程）。Major GC 的速度一般会比 Minor GC 慢 10 倍以上。</p>
+</blockquote>
+<h3 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h3><p>所谓的大对象是指需要大量连续内存空间的 Java 对象，最典型的大对象就是那种很长的字符串以及数组（比遇到大对象更加坏的消息是遇到一群“朝生夕死”的“短命大对象”），经常出现大对象融到导致内存还有不少空间时就需要提前出发垃圾收集以获取足够的连续空间来“安置”它们。</p>
+<p>虚拟机提供了一个 -XX:PretenureSizeThreshold 参数，令大于这个设置值得对象直接在老年代分配。这样做的目的是避免在 Eden 区以及两个 Survivor 区之间发生大量的内存复制。</p>
+<h3 id="长期存活的对象将进入老年代"><a href="#长期存活的对象将进入老年代" class="headerlink" title="长期存活的对象将进入老年代"></a>长期存活的对象将进入老年代</h3><p>前面说过新生代大部分都是“朝生夕死”的对象，如果某个对象长期存活就不如放入到老年代，减少对于新生代内存占用，减少新生代的 GC 次数。虚拟机会为每个对象都定义一个年龄计数器，新生代中的对象如果每熬过一次 GC，年龄计数器便会加 1，当达到一定年龄（默认 15 岁），便会晋升到老年代中。可以通过参数 -XX:MaxTenuringThreshold 来设置晋升到老年代对象的年龄。</p>
+<p>为了更好地适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了 MaxTenringThreshold 才能晋升老年代，如果在 Survivor 空间中相同年龄所有对象大小的总和大于 Survivor 空间的一半，年龄大于或等于改年龄的对象就可以直接进入老年代，无需等到 MaxtenuringThreshold 中要求的年龄。</p>
+<h3 id="空间分配担保"><a href="#空间分配担保" class="headerlink" title="空间分配担保"></a>空间分配担保</h3><p>在发生 Minor GC 之前，虚拟机会检查老年中最大可用连续内存是否大于新生代中所有对象内存空间，如果大于那么这次 Minor GC 便是安全。否则则查看 HandlePromotionFailure 设置值是否允许担保失败，如果允许则会查看老年代中最大可用连续内存是否大于历次晋升到老年代对象的平均大小，如果大于，将会会尝试进行一次 Minor GC，尽管这次是否风险的；如果小于或者 HandlePromotionFailure 不允许冒险，那么便进行一次 Full GC。</p>
+<p>前面提到，新生代使用复制收集算法，单位了内存利用率，只是用其中一个 Survivor 空间作为轮换备份，当出现大量对象存活（最极端的情况就是内存回收后新生代中的所有对象都存活），就需要老年代进行担保，将 Survivor 中无法容纳的对象直接进入老年代。老年代担保，前提是老年代中有足够内存容纳剩余的对象，一共有多少对象会活下来在实际完成内存回收之前是无法明确知道的，所以只好取每一次回收晋升到老年代对象容量的平均大小值作为经验值，与老年代的剩余空间作比较，决定是否进行 Full GC 来让老年代腾出更多空间。</p>
+<p>虽然担保失败时绕的圈子最大，但大部分情况下都还是将 HandlePromotionFailure 开关打开，避免 Full GC 过于频繁。</p>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/GC/">GC</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2018/09/30/java-command/" rel="prev" title="JVM 故障排查常用命令">
+						JVM 故障排查常用命令 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2018/08/22/java-reference/" rel="next" title="Java Reference &amp; ReferenceQueue">
+						Java Reference &amp; ReferenceQueue
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'Java 内存分配策略',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  var disqus_url = 'http://blog.zhangyong.io/2018/09/02/java-memory-allocation/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

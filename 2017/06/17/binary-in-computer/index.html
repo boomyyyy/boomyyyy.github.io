@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>计算机中的二进制 | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原码、反码、补码概念及计算机中二进制的运算">
+<meta name="keywords" content="radix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机中的二进制">
+<meta property="og:url" content="http://blog.zhangyong.io/2017/06/17/binary-in-computer/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="原码、反码、补码概念及计算机中二进制的运算">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-09T07:40:03.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机中的二进制">
+<meta name="twitter:description" content="原码、反码、补码概念及计算机中二进制的运算">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-binary-in-computer" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2017/06/17/binary-in-computer/">
+    	计算机中的二进制
+    </a>
+  </h2>
+	<time>
+	  Jun 17, 2017
+	</time>
+	
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
+
+	
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+ 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二进制"><span class="toc-number">2.</span> <span class="toc-text">二进制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有符号数和无符号数"><span class="toc-number">3.</span> <span class="toc-text">有符号数和无符号数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#有符号数"><span class="toc-number">3.1.</span> <span class="toc-text">有符号数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无符号数"><span class="toc-number">3.2.</span> <span class="toc-text">无符号数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栗子"><span class="toc-number">3.3.</span> <span class="toc-text">栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-中-int-类型在计算机类型中的表示方法"><span class="toc-number">3.3.1.</span> <span class="toc-text">Java 中 int 类型在计算机类型中的表示方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二进制转换"><span class="toc-number">3.3.2.</span> <span class="toc-text">二进制转换</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原码、反码、补码"><span class="toc-number">4.</span> <span class="toc-text">原码、反码、补码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#有符号数-1"><span class="toc-number">4.1.</span> <span class="toc-text">有符号数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栗子-1"><span class="toc-number">4.2.</span> <span class="toc-text">栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">1+1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2"><span class="toc-number">4.2.2.</span> <span class="toc-text">1-2</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JAVA中所有的数字变量都是有符号-正负-的？"><span class="toc-number">5.</span> <span class="toc-text">JAVA中所有的数字变量都是有符号(正负)的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意点"><span class="toc-number">6.</span> <span class="toc-text">注意点</span></a></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>计算机中存储数据的<strong>最小单元</strong>为 bit（位），简记为 b ，二进制中的 0、1 便是一个 bit，并且 8bit = 1byte（字节）。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="二进制"><a href="#二进制" class="headerlink" title="二进制"></a>二进制</h2><blockquote>
+<p>十进制为逢十进一，而二进制则为逢二进一，二进制使用0和1表示任意数。</p>
+</blockquote>
+<h2 id="有符号数和无符号数"><a href="#有符号数和无符号数" class="headerlink" title="有符号数和无符号数"></a>有符号数和无符号数</h2><blockquote>
+<p>计算机中参与运算的数字可以分为两类：有符号数和无符号数。</p>
+</blockquote>
+<h3 id="有符号数"><a href="#有符号数" class="headerlink" title="有符号数"></a>有符号数</h3><blockquote>
+<p>对于有符号数而言，符号的正、负机器是无法识别的，但由于“正、负”恰好是两种截然不同的状态，如果用“0”表示“正”，用“1”表示“负”，这样符号也被数字化了，并且规定将它放在有效数字的前面，即组成了有符号数。所以，在二进制中使用最高位（第一位）来表示符号，最高位是0，表示正数；最高位是1，表示负数。</p>
+</blockquote>
+<h3 id="无符号数"><a href="#无符号数" class="headerlink" title="无符号数"></a>无符号数</h3><blockquote>
+<p>无符号数是针对二进制来讲的，无符号数的表数范围是非负数。全部二进制均代表数值（所有位都用于表示数的大小），没有符号位。即第一个”0”或”1”不表示正负。</p>
+</blockquote>
+<h3 id="栗子"><a href="#栗子" class="headerlink" title="栗子"></a>栗子</h3><h4 id="Java-中-int-类型在计算机类型中的表示方法"><a href="#Java-中-int-类型在计算机类型中的表示方法" class="headerlink" title="Java 中 int 类型在计算机类型中的表示方法"></a>Java 中 int 类型在计算机类型中的表示方法</h4><ul>
+<li>+1 = 00000000 00000000 00000000 00000001</li>
+<li>-1 = 10000000 00000000 00000000 00000001</li>
+</ul>
+<h4 id="二进制转换"><a href="#二进制转换" class="headerlink" title="二进制转换"></a>二进制转换</h4><blockquote>
+<p>从右到左用二进制的每个数去乘以2的相应次方（次方要从0开始算起)。</p>
+</blockquote>
+<p><strong>二进制转十进制</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">10101</span><br><span class="line">=1*2^4+0*2^3+1*2^2+0*2^1+1*2^0</span><br><span class="line">=16+4+1</span><br><span class="line">=21</span><br></pre></td></tr></table></figure></p>
+<p><strong>十进制转二进制</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">21=</span><br><span class="line">21/2=10.........1</span><br><span class="line">10/2=5..........0</span><br><span class="line">5/2=2...........1</span><br><span class="line">2/2=1...........0</span><br><span class="line">1/2=0...........1</span><br><span class="line">=10101</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>进制间转换请参考：<a href="//blog.yongshu.space/2017-06-17/radix-cast" target="_bank">进制间转换</a></p>
+</blockquote>
+<h2 id="原码、反码、补码"><a href="#原码、反码、补码" class="headerlink" title="原码、反码、补码"></a>原码、反码、补码</h2><h3 id="有符号数-1"><a href="#有符号数-1" class="headerlink" title="有符号数"></a>有符号数</h3><ul>
+<li>二进制的最高位是符号位：0代表正数，1代表负数</li>
+<li>正数的原码，反码，补码都一样</li>
+<li>负数的反码等于符号位不变，其他位取反，即1变0，0变1</li>
+<li>负数的补码等于反码加1</li>
+<li>0的反码和补码都是0</li>
+<li><strong>在计算机运算时，都是以补码的方式来运算的</strong></li>
+</ul>
+<h3 id="栗子-1"><a href="#栗子-1" class="headerlink" title="栗子"></a>栗子</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1+1"></a>1+1</h4><ol>
+<li>1的原码为：00000000000000000000000000000001</li>
+<li><p>因为正数的原码、反码、补码都一样，所以：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1+1=</span><br><span class="line">00000000000000000000000000000001</span><br><span class="line">+</span><br><span class="line">00000000000000000000000000000001</span><br><span class="line">=</span><br><span class="line">00000000000000000000000000000010（二进制逢二进一）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>00000000000000000000000000000010转换为十进制为：1*2^1=2</p>
+</li>
+</ol>
+<h4 id="1-2"><a href="#1-2" class="headerlink" title="1-2"></a>1-2</h4><ol>
+<li>在数学中减法也可以转换为加法，因此1-2=1+（-2）</li>
+<li>-2的原码=10000000000000000000000000000010</li>
+<li>通过原码得出反码=11111111111111111111111111111101</li>
+<li>通过反码得出补码=11111111111111111111111111111110</li>
+<li><p>然后通过补码去计算得出结果的补码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1+（-2）=</span><br><span class="line">00000000000000000000000000000001</span><br><span class="line">+</span><br><span class="line">11111111111111111111111111111110</span><br><span class="line">=</span><br><span class="line">11111111111111111111111111111111</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过补码求出反码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">11111111111111111111111111111111</span><br><span class="line">-</span><br><span class="line">00000000000000000000000000000001</span><br><span class="line">=</span><br><span class="line">11111111111111111111111111111110</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过反码得出原码：10000000000000000000000000000001</p>
+</li>
+<li>二进制转为十进制：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">10000000000000000000000000000001</span><br><span class="line">=</span><br><span class="line">1*2^0</span><br><span class="line">=-1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="JAVA中所有的数字变量都是有符号-正负-的？"><a href="#JAVA中所有的数字变量都是有符号-正负-的？" class="headerlink" title="JAVA中所有的数字变量都是有符号(正负)的？"></a>JAVA中所有的数字变量都是有符号(正负)的？</h2><blockquote>
+<p>这句话，还有点争议。在Java中char类型是：16位Unicode字符，取值范围 0 ~ 65535，不存在负数范围，从这点上说：”char类型就是一个无符号数”；</p>
+</blockquote>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
+<li><strong>正数的原码、反码、补码都一样</strong></li>
+<li><strong>如果想将二进制转为十进制，必须使用二进制的原码</strong></li>
+</ol>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/radix/">radix</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/06/22/java-bit-operations/" rel="prev" title="Java 位运算">
+						Java 位运算 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2017/06/17/radix-cast/" rel="next" title="进制转换">
+						进制转换
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: '计算机中的二进制',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  var disqus_url = 'http://blog.zhangyong.io/2017/06/17/binary-in-computer/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

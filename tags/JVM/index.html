@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Tag: JVM | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="BOOM">
+<meta property="og:url" content="http://blog.zhangyong.io/tags/JVM/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BOOM">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        
+<script>
+  window.subData = { title: 'Tag : JVM' }
+</script>
+
+<article id="archive-page" class="post article white-box">
+    <section class="meta">
+        <h2 class="title">
+          <a id="title">
+          </a>
+        </h2>
+      </section>
+  <section class="archive">
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/10/21/jvm-invoke-method/">
+        虚拟机字节码执行引擎2之方法调用
+      </a>
+    </h2>
+    
+    <time>
+      Oct 21, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>方法调用不等同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用那一个方法），暂时还不涉及方法内部的具体运行过程。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/10/21/jvm-invoke-method/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/class-load/">class-load</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/10/21/jvm-invoke-method/">
+              <time>2018-10-21</time>
+              <span class="title"><span>虚拟机字节码执行引擎2之方法调用</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/10/14/jvm-method-exec/">
+        虚拟机字节码执行引擎1之方法执行
+      </a>
+    </h2>
+    
+    <time>
+      Oct 14, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>执行引擎是 Java 虚拟机最核心的组成部分之一。“虚拟机”是一个相对于“物理机”的概念，这两种机器都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、硬件、指令集和操作系统层面上的，而虚拟机的执行引擎是有自己实现的，因此可以自行制定指令集与引擎的结构体系，并且能够执行那些不被硬件直接支持的指令集格式。</p>
+<p><strong>Java 虚拟机规范中制定了虚拟机字节码执行引擎的概念模型，这个概念模型成为各种虚拟机执行引擎的统一外观（Facade）。</strong>不同的虚拟机实现里面，执行引擎在执行 Java 代码的时候可能会有解释执行（通过解释器执行）和编译执行（通过及时编译器产生本地代码）两种选择，也可能两者兼备，甚至还可能会包含几个不同级别的编译器执行引擎。但<strong>从外观上看起来，所有的 Java 虚拟机的执行引擎都是一致的：输入的是字节码文件，处理过程是字节码解析的等效过程，输出的是执行结果。</strong></p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/10/14/jvm-method-exec/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/class-load/">class-load</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/10/14/jvm-method-exec/">
+              <time>2018-10-14</time>
+              <span class="title"><span>虚拟机字节码执行引擎1之方法执行</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/10/13/class-loader/">
+        类加载器
+      </a>
+    </h2>
+    
+    <time>
+      Oct 13, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>上一篇文章学习了类加载的过程，并且只是简单的说到了使用类加载器加载类，而这一篇文件则详细的介绍一下类加载过程。</p>
+<p><strong>虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取此类的二进制字节流”这个动作放到 Java 虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类，这个动作的代码模块称为 “类加载器”。类加载器在类层次划分，OSGi、热部署、代码加密等领域大放异彩，称为 Java 技术体系中重要的基石。</strong></p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/10/13/class-loader/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/class-load/">class-load</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/10/13/class-loader/">
+              <time>2018-10-13</time>
+              <span class="title"><span>类加载器</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/10/07/jvm-class-load/">
+        JVM 类加载机制
+      </a>
+    </h2>
+    
+    <time>
+      Oct 7, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。</p>
+<p><strong>Java 语言里面，类的加载、连接和初始化过程都是在程序运行期间完成的</strong>，这种策略虽然会令类加载时稍微增加一些性能开销，但是会为 Java 应用程序提供了高度的灵活性，Java 里天生可以动态扩展的语言特性（我理解就是多态）就是依赖运行期动态加载和动态连接这个特点实现的。</p>
+<p><strong>类被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Useing）和卸载（Unloading）7个阶段。其中验证、准备、解析3个部分统称为连接。</strong></p>
+<p><img src="/static/img/class_lifecycle.jpeg" alt="类的生命周期"></p>
+<blockquote>
+<p>约定：第一，在实际情况中，每个 Class 文件都可能代表着 Java 语言中的一个类活着接口，后文直接对“类”的描述都包括了类和接口的可能性，而对于类和接口需要分开描述的场景，会特别指明；第二，所提到的“Class 文件”并非特指某个存在于具体磁盘中的文件，这里所说的“Class 文件”应当是一串二进制的字节流，无论以何种形式存在都可以。</p>
+</blockquote>
+
+    
+	  <div class="readmore">
+      <a href="/2018/10/07/jvm-class-load/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/class-load/">class-load</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/10/07/jvm-class-load/">
+              <time>2018-10-07</time>
+              <span class="title"><span>JVM 类加载机制</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/09/30/java-command/">
+        JVM 故障排查常用命令
+      </a>
+    </h2>
+    
+    <time>
+      Sep 30, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前面几篇文章介绍了 JVM 的内存分配机制和垃圾回收机制，这篇文章主要介绍一些在当 JVM 发生故障时定位分析问题所使用到的一些工具，使用这些工具可以用来打印运行日志、异常堆栈、GC 日志 或者导出线程快照（threaddump/javacore 文件）、堆转储快照（heapdump/hprof 文件）等。常用的工具如下:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jps</td>
+<td>JVM Process Status Tool，显示指定系统内所有的 HotSpot 虚拟机进程</td>
+</tr>
+<tr>
+<td>jstat</td>
+<td>JVM Statictics Montoring Tool，用于收集HotSpot 虚拟机各方面的运行数据</td>
+</tr>
+<tr>
+<td>jinfo</td>
+<td>Configuration Info for Java，显示虚拟机配置信息</td>
+</tr>
+<tr>
+<td>jmap</td>
+<td>Memory Map for Java，生成虚拟机的内存转储快照（heapdump 文件）</td>
+</tr>
+<tr>
+<td>jhat</td>
+<td>Jvm Heap Dump Browser，用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以再浏览器上可以查看分析结果</td>
+</tr>
+<tr>
+<td>jstack</td>
+<td>Stack Trace for Java，显示虚拟机进程快照</td>
+</tr>
+</tbody>
+</table>
+
+    
+	  <div class="readmore">
+      <a href="/2018/09/30/java-command/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/tools/">tools</a>
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/09/30/java-command/">
+              <time>2018-09-30</time>
+              <span class="title"><span>JVM 故障排查常用命令</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/09/02/java-memory-allocation/">
+        Java 内存分配策略
+      </a>
+    </h2>
+    
+    <time>
+      Sep 2, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>学习完了 Java 内存回收策略，我们在调过头来学习一下内存分配策略。内存分配策略大方向就是向怼上进行分配（但可能经过 JIT 编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的 Eden 区，如果启动了本地线程分配缓冲，将按线程优先分配在 TLAB 上分配。少数情况下也可能会直接分配在老年代中，分配到规则并不是百分之百固定的，其细节取决于当前使用的哪一块垃圾收集器组合，还有虚拟机中与内存相关的参数设置。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/09/02/java-memory-allocation/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/GC/">GC</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/09/02/java-memory-allocation/">
+              <time>2018-09-02</time>
+              <span class="title"><span>Java 内存分配策略</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/08/22/java-reference/">
+        Java Reference &amp; ReferenceQueue
+      </a>
+    </h2>
+    
+    <time>
+      Aug 22, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <a id="more"></a>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>在 JDK 1.2 之前，Java 中的引用的定义很传统：如果 reference 类型的数据中存储的数值代表的是另一块内存的起始地址，就称这块内存代表着一个引用。这种定义很纯粹，但是太多狭隘，一个对象在这种定义下只有被引用活着没有被引用两种状态。在 JDK 1.2 之后，Java 对引用的概念进行了扩充，将引用分为强引用（Strong Reference）、软引用（Soft Reference）、弱引用（Weak Reference）、虚引用（Phantom Reference）4种，这 4 种引用强度一次逐渐减弱。</p>
+<ul>
+<li><p>强引用就是指在程序代码之中普遍存在的，类似 “Object obj = new Object()” 这类的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</p>
+</li>
+<li><p>软引用使用来描述一些还有用但是非必须的对象，对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收返回之中进行第二次回收。如果这次回收还没有足够的内存，才会跑出内存溢出。在 JDK 1.2 之后，提供了 SoftReference 类来实现软引用。</p>
+</li>
+<li><p>弱引用也是用来描述非必须对象的，但是它的强度比软引用更弱一些，被弱引用关联的喜爱那个只能生存到下一次垃圾收集发生之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。在 JDK 1.2 之后，提供了 WeakReference 类来实现弱引用。</p>
+</li>
+<li><p>虚引用也被成为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被垃圾回收器回收的时取得一个系统通知，用于做后续相关清理工作。在 JDK 1.2 之后，提供了 PhantomReference 类来实现虚引用。</p>
+</li>
+</ul>
+<p>类图如下。</p>
+<p><img src="/static/img/java_ref_structure.png" alt="java ref structure"></p>
+<h2 id="ReferenceQueue"><a href="#ReferenceQueue" class="headerlink" title="ReferenceQueue"></a>ReferenceQueue</h2><p>通过 Reference 的构造函数我们可以看到在初始化的时候会传入一个 ReferenceQueue ，而 ReferenceQueue 的作用就像是在 Reference 引用的对象被 GC 掉后，会把 Reference 这个对象放入到 ReferenceQueue 中做后续处理工作。代码示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferenceQueueDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReferenceQueue&lt;Bean&gt; q = <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</span><br><span class="line">        ExtendedWeakReference ref = <span class="keyword">new</span> ExtendedWeakReference(<span class="keyword">new</span> Bean(<span class="string">"ref"</span>), q);</span><br><span class="line"></span><br><span class="line">        System.gc();</span><br><span class="line"></span><br><span class="line">        Reference&lt;? extends Bean&gt; r;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>((r = q.poll()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            ExtendedWeakReference t = (ExtendedWeakReference) r;</span><br><span class="line">            System.out.println(<span class="string">"回收了 bean 对象，name 为:"</span> + t.name);</span><br><span class="line">            t.clean();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Bean</span> </span>&#123;</span><br><span class="line">        String name;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Bean</span> <span class="params">(String name)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ExtendedWeakReference</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">Bean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        String name;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ExtendedWeakReference</span><span class="params">(Bean referent, ReferenceQueue&lt;? <span class="keyword">super</span> Bean&gt; q)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(referent, q);</span><br><span class="line">            <span class="keyword">this</span>.name = referent.name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/GC/">GC</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/08/22/java-reference/">
+              <time>2018-08-22</time>
+              <span class="title"><span>Java Reference &amp; ReferenceQueue</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/08/22/gc/">
+        JVM 垃圾回收机制知识点整理
+      </a>
+    </h2>
+    
+    <time>
+      Aug 22, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Java 与 C++ 之间有一堵由动态分配和垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。说起 GC，大部分人都把这项技术当做 Java 语言的半生产物。事实上，GC 的历史比 Java 久远，1960 年诞生于 MIT 的 Lisp 是第一门真正使用内存动态分配和垃圾收集技术的语言。当 Lisp 还在胚胎时期时，人们就在思考 GC 需要完成的三件事：</p>
+<ul>
+<li>那些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>如何回收？</li>
+</ul>
+
+    
+	  <div class="readmore">
+      <a href="/2018/08/22/gc/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/GC/">GC</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/08/22/gc/">
+              <time>2018-08-22</time>
+              <span class="title"><span>JVM 垃圾回收机制知识点整理</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2017/11/04/jvm-memory-model/">
+        JVM 内存区域
+      </a>
+    </h2>
+    
+    <time>
+      Nov 4, 2017
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>jvm 内存区域整体分为5个部分：</p>
+<ol>
+<li>程序计数器</li>
+<li>Java 虚拟机栈</li>
+<li>本地方法栈</li>
+<li>Java 堆</li>
+<li>方法区</li>
+</ol>
+
+    
+	  <div class="readmore">
+      <a href="/2017/11/04/jvm-memory-model/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2017/11/04/jvm-memory-model/">
+              <time>2017-11-04</time>
+              <span class="title"><span>JVM 内存区域</span></span>
+            </a>
+          </div>
+    
+  </section>
+</article>
+
+<script>
+document.getElementById('title').text=window.subData.title
+</script>
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Tag: concurrency | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="BOOM">
+<meta property="og:url" content="http://blog.zhangyong.io/tags/concurrency/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BOOM">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        
+<script>
+  window.subData = { title: 'Tag : concurrency' }
+</script>
+
+<article id="archive-page" class="post article white-box">
+    <section class="meta">
+        <h2 class="title">
+          <a id="title">
+          </a>
+        </h2>
+      </section>
+  <section class="archive">
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/12/08/thread-pool-executor-exec-process/">
+        ThreadPoolExecutor 整体工作流程
+      </a>
+    </h2>
+    
+    <time>
+      Dec 8, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><ol>
+<li>初始化</li>
+<li>调用 execute 方法</li>
+<li>判断线程数是否小于核心线程数，如果是跳转到则创建核心线程（进入创建线程部分），firstTask 为要执行的任务，如果失败则跳转到4</li>
+<li>判断线程池是否是 RUNNING 状态，如果是则放入任务队列如果成功则跳转到5 否则跳转到8</li>
+<li>重新校验线程池是否是 RUNNING 状态，如果不是则跳转到6 否则 7</li>
+<li>是否可以从队列中移除任务，如果是则跳转到9，否则跳转到 7</li>
+<li>校验线程池线程数是否等于0，如果是创建非核心线程，firstTask 为空（进入创建线程部分）否则进入进行线程部分</li>
+<li>创建非核心线程（进入创建线程部分），创建失败则跳转到9</li>
+<li>拒绝任务</li>
+</ol>
+<h1 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h1><ol>
+<li>校验线程池状态，如果满足如下任一情况，则<strong>创建线程失败</strong>，直接退出，否则跳转到 2<ul>
+<li>线程池状态为 STOP、TINDYING、TERMINATED </li>
+<li>SHUTDOWN 状态下 firstTask 不为空或者队列为空</li>
+</ul>
+</li>
+<li>判断线程池线程数量，如果满足如下任一情况则<strong>创建线程池失败</strong>，直接退出。否则跳转到 3<ul>
+<li>线程池线程数大于等于线程池最大可承受线程数量（CAPACITY）</li>
+<li>如果是核心线程则线程数超过了核心线程数</li>
+<li>如果是非核心线程则线程数超过了线程池最大线程数（maximumPoolSize）</li>
+</ul>
+</li>
+<li>通过 CAS 的方式设置 ctl，如果成功则跳转到5 失败则跳转到 4</li>
+<li>重新校验线程池状态，如果跟第1步中的状态不一致，则跳转到第 1 部，否则跳转到 2</li>
+<li>再一次校验线程池状态，如果满足如下任一情况则线程池<strong>创建成功</strong>，跳转到6 否则跳转到 7<ul>
+<li>线程池状态是 RUNNING</li>
+<li>线程池状态时 SHUTDOWN 且 firstTask 为空</li>
+<li>当前线程没有被启动</li>
+</ul>
+</li>
+<li>线程创建成功，进行相关簿记，并启动线程（进入到执行线程部分）</li>
+<li>回调创建线程失败逻辑，进行相关簿记，然后退出。</li>
+</ol>
+<h1 id="执行线程"><a href="#执行线程" class="headerlink" title="执行线程"></a>执行线程</h1><ol>
+<li>获取任务，firstTask 是否为空，不为空则跳转到到3，否则跳转到 2</li>
+<li>从任务队列获取任务，如果不为空跳转到 3 ，否则跳转到 4</li>
+<li>执行任务，如果没有抛出异常跳转到2，否则跳转到 4</li>
+<li>执行线程退出回调方法，进行相关簿记</li>
+</ol>
+
+
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/12/08/thread-pool-executor-exec-process/">
+              <time>2018-12-08</time>
+              <span class="title"><span>ThreadPoolExecutor 整体工作流程</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/11/11/thread-pool-executor/">
+        ThreadPoolExecutor 源码阅读笔记一（JDK 1.8）
+      </a>
+    </h2>
+    
+    <time>
+      Nov 11, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <p>线程是个很好的工具，我们知道可以通过 <code>new Thread().start()</code> 的方式去开启一个线程，但是如果纯粹的使用这种方式去创建线程，每来一个任务，创建一个线程，这种方式是存在缺陷的，尤其是在无限制的创建大量线程的时候：</p>
+<ol>
+<li><strong>线程生命周期的开销非常高。</strong>线程的创建和销毁不是没有代价的。根据平台的不同，实际的开销开销也有所不同，因为线程的创建过程都会需要时间，延迟请求的处理，并且需要 JVM 和操作系统提供一些辅助操作。如果请求的到达率非常高且请求的处理过程是轻量级的，例如大多数服务器应用程序就是这种情况，那么为每个请求创建一个新线程将消耗大量的系统资源。</li>
+<li><strong>资源消耗。</strong>活跃的线程会消耗系统资源，尤其是内存。如果可运行的线程数量超过可用处理器的数量，那么有些线程将闲置。大量空闲的线程会占用许多内存，给垃圾收集器带来压力，而且大量线程在竞争 CPU 资源时还会产生其他的性能开销。如果你已经拥有足够多的线程使 CPU 保持忙碌状态，那么再创建更多的线程反而会降低性能。</li>
+<li><strong>稳定性。</strong>在可创建线程数量上存在一个限制。这个限制值将随着平台的不同而不同，并且受多个因素制约，包括 JVM 的启动参数、Thread 构造函数中请求栈的大小，以及底层操作系统对线程的限制等。如果破坏了这些限制，那么很可能会抛出 OutOfMemoryError 异常，要想从这种错误中恢复过来是非常危险的，更简单的办法是通过构造程序来避免超出这种限制。</li>
+</ol>
+<p>因此看来，使用线程池管理线程是多么的有必要。Java 中是通过 ThreadPoolExecutor 来实现线程池的，接下来就通过阅读源码来看下线程池从初始化到执行到结束的具体实现。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/11/11/thread-pool-executor/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+        <a href="/tags/source-code/">source-code</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/11/11/thread-pool-executor/">
+              <time>2018-11-11</time>
+              <span class="title"><span>ThreadPoolExecutor 源码阅读笔记一（JDK 1.8）</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/11/10/thread-safe/">
+        线程安全
+      </a>
+    </h2>
+    
+    <time>
+      Nov 10, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>《Java Concurrency In Practice》的作者 Brian Geotz 对”线程安全“有一个比较恰当的定义：<strong>”当多个线程访问一个对象时，如果不考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确的结果，那这个对象是线程安全的。“</strong></p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/11/10/thread-safe/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/11/10/thread-safe/">
+              <time>2018-11-10</time>
+              <span class="title"><span>线程安全</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/11/04/java-and-thread/">
+        Java 和线程
+      </a>
+    </h2>
+    
+    <time>
+      Nov 4, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>并发不一定要依赖多线程（如 PHP 中很常见的多进程并发），但是在 Java 里面谈论并发，大多数都与线程脱不开关系。讲到 Java 线程，就从 Java 线程在虚拟机中的实现开始讲起。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/11/04/java-and-thread/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/11/04/java-and-thread/">
+              <time>2018-11-04</time>
+              <span class="title"><span>Java 和线程</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/11/03/java-memory-model-and-thread/">
+        Java 内存模型
+      </a>
+    </h2>
+    
+    <time>
+      Nov 3, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>衡量一个服务性能高低好坏，每秒事务处理数（Transactions Per Seconds，TPS）是最重要的指标之一，它代表着一秒内服务端平均能响应的请求总数，而 TPS 值与程序的并发能力又有非常密切的关系。对于计算量相同的任务，程序线程并发协调的越有条不紊，效率自然就会越高；反之，线程之间频繁阻塞甚至死锁，将会大大降低程序的并发能力。</p>
+<p>Java 语言和虚拟机提供了许多工具，把并发编程的门槛降低了不少。并且各种中间件服务器、各类框架都努力得替程序员处理尽可能多的线程并发细节，使得程序员在编码时能更关注业务逻辑，而不是花费大部分时间去关注此业务会同时被多少人调用、如何协调硬件资源。无论语言、中间件和框架如何现金，开发人员都不能期望他们能独立完成所有并发处理的事情，了解并发的内幕也是称为一个高级程序员不可缺少的课程。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/11/03/java-memory-model-and-thread/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/11/03/java-memory-model-and-thread/">
+              <time>2018-11-03</time>
+              <span class="title"><span>Java 内存模型</span></span>
+            </a>
+          </div>
+    
+    <!-- <div class='post-wrapper'>
+      <article class="post reveal">
+  <section class="meta">
+    
+    <h2 class="title">
+      <a href="/2018/08/04/concurrenthashmap/">
+        ConcurrentHashMap 简述(JDK 1.8)
+      </a>
+    </h2>
+    
+    <time>
+      Aug 4, 2018
+    </time>
+		
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+
+  </section>
+  <section class="article typo">
+	  <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>之前了解的相关 HashMap 都是线程不安全的，今天来看下线程安全的相关 Map，其中较为熟悉的 Hashtable 和 ConcurrentHashMap 两个。其中 Hashtable 是在 HashMap 的基础上将所有的方法是 synchronized 关键字修饰，锁的作用范围是当前对象，每次只允许一个线程访问当前 map，性能极其差，而 ConcurrentHashMap 首先将存储数据的链表数组使用 volatile 关键字修饰，保证内存可见性，在查询的时候不需要加锁，极大的提升了查询性能，插入数据时缩小了锁的作用范围，先通过插入数据的 key 去查询数据所处于链表数组的位置，定位到具体的链表，然后对链表进行加锁，因此如果链表数组的长度为 n，则最多允许 n 个线程同时插入数据。接下来简单的看下<br>ConcurrentHashMap 的插入方法的具体实现。</p>
+
+    
+	  <div class="readmore">
+      <a href="/2018/08/04/concurrenthashmap/">Read More</a>
+    </div>
+    
+    
+    
+	  <div class="full-width auto-padding tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/collections/">collections</a>
+      
+        <a href="/tags/concurrency/">concurrency</a>
+      
+	  </div>
+    
+  </section>
+</article>
+    </div> -->
+    <div class="archive-item archive-post mark">
+            <a href="/2018/08/04/concurrenthashmap/">
+              <time>2018-08-04</time>
+              <span class="title"><span>ConcurrentHashMap 简述(JDK 1.8)</span></span>
+            </a>
+          </div>
+    
+  </section>
+</article>
+
+<script>
+document.getElementById('title').text=window.subData.title
+</script>
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

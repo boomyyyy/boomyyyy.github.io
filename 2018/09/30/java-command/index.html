@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>JVM 故障排查常用命令 | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述前面几篇文章介绍了 JVM 的内存分配机制和垃圾回收机制，这篇文章主要介绍一些在当 JVM 发生故障时定位分析问题所使用到的一些工具，使用这些工具可以用来打印运行日志、异常堆栈、GC 日志 或者导出线程快照（threaddump/javacore 文件）、堆转储快照（heapdump/hprof 文件）等。常用的工具如下:    名称 主要作用     jps JVM Process Stat">
+<meta name="keywords" content="tools,Java,JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM 故障排查常用命令">
+<meta property="og:url" content="http://blog.zhangyong.io/2018/09/30/java-command/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="概述前面几篇文章介绍了 JVM 的内存分配机制和垃圾回收机制，这篇文章主要介绍一些在当 JVM 发生故障时定位分析问题所使用到的一些工具，使用这些工具可以用来打印运行日志、异常堆栈、GC 日志 或者导出线程快照（threaddump/javacore 文件）、堆转储快照（heapdump/hprof 文件）等。常用的工具如下:    名称 主要作用     jps JVM Process Stat">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/jhat-analysis.png">
+<meta property="og:updated_time" content="2018-12-09T07:40:19.914Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM 故障排查常用命令">
+<meta name="twitter:description" content="概述前面几篇文章介绍了 JVM 的内存分配机制和垃圾回收机制，这篇文章主要介绍一些在当 JVM 发生故障时定位分析问题所使用到的一些工具，使用这些工具可以用来打印运行日志、异常堆栈、GC 日志 或者导出线程快照（threaddump/javacore 文件）、堆转储快照（heapdump/hprof 文件）等。常用的工具如下:    名称 主要作用     jps JVM Process Stat">
+<meta name="twitter:image" content="http://blog.zhangyong.io/static/img/jhat-analysis.png">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-java-command" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2018/09/30/java-command/">
+    	JVM 故障排查常用命令
+    </a>
+  </h2>
+	<time>
+	  Sep 30, 2018
+	</time>
+	
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
+
+	
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+ 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jps"><span class="toc-number">2.</span> <span class="toc-text">jps</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式"><span class="toc-number">2.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例"><span class="toc-number">2.2.</span> <span class="toc-text">执行样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要选项"><span class="toc-number">2.3.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstat"><span class="toc-number">3.</span> <span class="toc-text">jstat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式-1"><span class="toc-number">3.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例-1"><span class="toc-number">3.2.</span> <span class="toc-text">执行样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要选项-1"><span class="toc-number">3.3.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jinfo"><span class="toc-number">4.</span> <span class="toc-text">jinfo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式-2"><span class="toc-number">4.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例-2"><span class="toc-number">4.2.</span> <span class="toc-text">执行样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要选项-2"><span class="toc-number">4.3.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jmap"><span class="toc-number">5.</span> <span class="toc-text">jmap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式-3"><span class="toc-number">5.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例-3"><span class="toc-number">5.2.</span> <span class="toc-text">执行样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要选项-3"><span class="toc-number">5.3.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jhat"><span class="toc-number">6.</span> <span class="toc-text">jhat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例-4"><span class="toc-number">6.1.</span> <span class="toc-text">执行样例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstack"><span class="toc-number">7.</span> <span class="toc-text">jstack</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式-4"><span class="toc-number">7.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行样例-5"><span class="toc-number">7.2.</span> <span class="toc-text">执行样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要选项-4"><span class="toc-number">7.3.</span> <span class="toc-text">主要选项</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前面几篇文章介绍了 JVM 的内存分配机制和垃圾回收机制，这篇文章主要介绍一些在当 JVM 发生故障时定位分析问题所使用到的一些工具，使用这些工具可以用来打印运行日志、异常堆栈、GC 日志 或者导出线程快照（threaddump/javacore 文件）、堆转储快照（heapdump/hprof 文件）等。常用的工具如下:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jps</td>
+<td>JVM Process Status Tool，显示指定系统内所有的 HotSpot 虚拟机进程</td>
+</tr>
+<tr>
+<td>jstat</td>
+<td>JVM Statictics Montoring Tool，用于收集HotSpot 虚拟机各方面的运行数据</td>
+</tr>
+<tr>
+<td>jinfo</td>
+<td>Configuration Info for Java，显示虚拟机配置信息</td>
+</tr>
+<tr>
+<td>jmap</td>
+<td>Memory Map for Java，生成虚拟机的内存转储快照（heapdump 文件）</td>
+</tr>
+<tr>
+<td>jhat</td>
+<td>Jvm Heap Dump Browser，用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以再浏览器上可以查看分析结果</td>
+</tr>
+<tr>
+<td>jstack</td>
+<td>Stack Trace for Java，显示虚拟机进程快照</td>
+</tr>
+</tbody>
+</table>
+<a id="more"></a>
+<h2 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h2><p>jps(JVM Process Status)可以列出正在运行的虚拟机进程，冰系那是虚拟机执行主类（Main Class，main() 函数所在的类)）名称以及这些进程的本地虚拟机唯一 ID（Local Virtual Machine Identifier，LVMID）。该命令是使用频率最高的 JDK 命令工具，因为其他的 JDK 工具大多数需要输入它查询到的 LVMID 来确定要监控的是哪一个虚拟机进程。对于本地虚拟机进程来说，LVMID 与操作系统的进程 ID （Process Identifier， PID）是一致的。</p>
+<h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps [options] [hostid]</span><br></pre></td></tr></table></figure>
+<p>hostid 可以通过 RMI 协议查询开启了 RMI 服务的远程虚拟机进程状态，hostid 为 RMI 注册表中的主机名。</p>
+<h3 id="执行样例"><a href="#执行样例" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jps -l</span><br><span class="line">47633 </span><br><span class="line">73929 sun.tools.jps.Jps</span><br><span class="line">47833 org.jetbrains.idea.maven.server.RemoteMavenServer</span><br><span class="line">48044 org.jetbrains.jps.cmdline.Launcher</span><br><span class="line">46525 org.codehaus.plexus.classworlds.launcher.Launcher</span><br><span class="line">5838 org.codehaus.plexus.classworlds.launcher.Launcher</span><br><span class="line">➜  ~</span><br></pre></td></tr></table></figure>
+<h3 id="主要选项"><a href="#主要选项" class="headerlink" title="主要选项"></a>主要选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-q</td>
+<td>只输出 LVMID，省略主类的名称</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>输出虚拟机进程启动时传递给主类 main() 函数的参数</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>输出主类的全名，如果进程执行的是 jar 包，输出 jar 路径</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>输出虚拟机进程启动时的 JVM 参数</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jps.html#CHDCGECD" target="_blank" rel="noopener">jps</a>{:target=”_blank”}</em></strong></p>
+<h2 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h2><p>jstat（JVM Statistics Monitoring Tool）是用于监视虚拟机各种运行状态信息的命令行工具。可以本地活着远程虚拟机进程的类装载、内存、垃圾收集、JIT 编译等运行数据。</p>
+<h3 id="命令格式-1"><a href="#命令格式-1" class="headerlink" title="命令格式"></a>命令格式</h3><ol>
+<li><p>本地虚拟机进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat [ option vmid [interval[s|ms] [count]] ]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>远程虚拟机进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat [ option [protocol:][//]lvmid[@hostname[:port]/servername] [interval[s|ms] [count]] ]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>参数 interval 和 count 表示查询间隔和次数，如果省略这两个参数，则代表只查询一次。其中  <code>jstat -gcutil 2764 250 20</code> 则表示每隔 250 毫秒查询一次进程 2764 的垃圾收集情况，一共查询 20 次。 option 代表着用户希望查询的虚拟机信息，主要分为三类：类装载、垃圾收集、运行期编译状况。</p>
+</blockquote>
+<h3 id="执行样例-1"><a href="#执行样例-1" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jstat -gcutil 5838</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.00   0.00  63.67  19.77  97.57  93.01    4    0.053     1    0.060    0.113</span><br><span class="line">➜  ~</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其中 E 表示 Eden 区使用了 63.67% 的空间，两个 Survivor 区（S0、S1，表示 Survivor0、Survivor1）里面都是空的），O 表示 Old 及老年代和 M 表示 Mataspace 方法区分别使用了 19.77% 和 97.57% 的空间。CCS 表示压缩泪空使用了 93.01（这项信息）。O 表示 Old 即老年代使用了 19.77% 的空间，M 表示 mataspace 即元数据区和 CCS 表示 matespace 中的类压缩空间分别使用了 97.57% 和 93.01%。程序运行以来共发生 Minior GC(YGC 表示 Young GC) 4 次。总耗时 0.053 秒，发生 Full GC（FGC 表示 Full GC）1次，Full GC 总耗时（FGCT 表示 Full GC Time）0.060 秒，所有 GC 总耗时（GCT 表示 GC Time）0.113 秒。</p>
+</blockquote>
+<h3 id="主要选项-1"><a href="#主要选项-1" class="headerlink" title="主要选项"></a>主要选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-class</td>
+<td>监视类装载、卸载、总空间以及类装载所耗费的时间</td>
+</tr>
+<tr>
+<td>-gc</td>
+<td>监视 Java 堆状况、包括 Eden 区、两个 Survivor 区、老年代、永久代（或者 mataspace）的容量、已用空间、GC 时间状况等信息</td>
+</tr>
+<tr>
+<td>-gccapacity</td>
+<td>监视内容与 -gc 基本相同，但输出主要关注 Java 堆哥哥区域使用到的最大、最小空间</td>
+</tr>
+<tr>
+<td>-gcutil</td>
+<td>监视内容与 -gc 基本相同，但输出主要关注一使用空间占总空间的百分比</td>
+</tr>
+<tr>
+<td>-gccause</td>
+<td>与 -gcutil 功能一样，但是会额外输出导致上一次 GC 产生的原因</td>
+</tr>
+<tr>
+<td>-gcnew</td>
+<td>监视新生代 GC 状况</td>
+</tr>
+<tr>
+<td>-gcnewcapacity</td>
+<td>监视内容与 -gcnew 基本相同，输出主要关注使用到的最大空间、最小空间</td>
+</tr>
+<tr>
+<td>-gcold</td>
+<td>监视老年代 GC 状况</td>
+</tr>
+<tr>
+<td>-gcoldcapacity</td>
+<td>监视内容与 -gcold 基本相同，输出主要关注使用到的最大空间、最小空间</td>
+</tr>
+<tr>
+<td>-compiler</td>
+<td>输出 JIT 编译器编译过的方法、耗时等信息</td>
+</tr>
+<tr>
+<td>-printcompilation</td>
+<td>输出已经被 JIT 编译的方法</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html#BEHHGFAE" target="_blank" rel="noopener">jstat</a>{:target=”_blank”}</em></strong></p>
+<h2 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h2><p>jinfo（Configuration Info for Java）的作用是事实查看和调整虚拟机各项参数。使用 <code>jps -v</code> 可以查看虚拟机启动时显示指定的参数列表，但如果想知道未被显示指定的参数的系统默认值，除了查资料，就只能使用 jinfo 的 -flag 选项进行查询了，jinfo 还可以使用 -sysprops 选项把虚拟机进程的 System.getProperties() 的内容打印出来。</p>
+<h3 id="命令格式-2"><a href="#命令格式-2" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jinfo [option] pid</span><br></pre></td></tr></table></figure>
+<h3 id="执行样例-2"><a href="#执行样例-2" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jinfo -flag CMSInitiatingOccupancyFraction 5838</span><br><span class="line">-XX:CMSInitiatingOccupancyFraction=-1</span><br><span class="line">➜  ~</span><br></pre></td></tr></table></figure>
+<h3 id="主要选项-2"><a href="#主要选项-2" class="headerlink" title="主要选项"></a>主要选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-flag &lt;name&gt;</td>
+<td>打印虚拟机参数的值</td>
+</tr>
+<tr>
+<td>-flag [+/-] &lt;name&gt;</td>
+<td>启用或者禁用虚拟机参数</td>
+</tr>
+<tr>
+<td>-flag &lt;name&gt;=&lt;value&gt;</td>
+<td>设置虚拟机参数的值</td>
+</tr>
+<tr>
+<td>-flags</td>
+<td>打印虚拟机所有参数值</td>
+</tr>
+<tr>
+<td>-sysprops</td>
+<td>打印 Java 系统属性</td>
+</tr>
+<tr>
+<td>no option</td>
+<td>打印虚拟机参数和 Java 系统属性</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jinfo.html#BCGEBFDD" target="_blank" rel="noopener">jinfo</a>{:target=”_blank”}</em></strong></p>
+<h2 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h2><p>jmap（Memory Map for Java）命令用于生成堆转储快照（一般称为 heapdump 或 dump 文件）。如果不使用 jmap 命令，想要获取 Java 堆转储快照，还有一些比较“暴力”的手段：</p>
+<ol>
+<li>使用 -XX:+HeapDumpOnOutOfMemoryError 参数，可以让虚拟机在 OOM 异常出现之后自动生成 dump 文件。</li>
+<li>通过 —XX:HeapDumpOnCtrlBreak 参数可以使用 [Ctrl]+[Break] 键让虚拟机生成 dump 文件</li>
+<li>在 Linux 系统下通过 kill -3 命令发送进程退出信号“吓唬”一下虚拟机，也能拿到 dump 文件</li>
+</ol>
+<p>jamp 的作用并不仅仅是为了获取 dump 文件，它还可以查询 finalize 执行队列、Java 堆的详细信息，如空间使用率、当前用的是哪种收集器等。</p>
+<h3 id="命令格式-3"><a href="#命令格式-3" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap [option] vmid</span><br></pre></td></tr></table></figure>
+<h3 id="执行样例-3"><a href="#执行样例-3" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jmap -dump:format=b,file=test.bin 5838</span><br><span class="line">Dumping heap to /Users/xxx/test.bin ...</span><br><span class="line">Heap dump file created</span><br><span class="line">➜  ~</span><br></pre></td></tr></table></figure>
+<h3 id="主要选项-3"><a href="#主要选项-3" class="headerlink" title="主要选项"></a>主要选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-dump</td>
+<td>生成 Java 堆转储快照。格式为：-dump:[live,]format=b,file=&lt;filename&gt;，其中 live 子参数说明是否只 dump 出存活对象</td>
+</tr>
+<tr>
+<td>-finalizerinfo</td>
+<td>显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法的对象。只在 Linux/Solaris 平台下有效</td>
+</tr>
+<tr>
+<td>-histo</td>
+<td>显示堆中对象统计信息，包括类、实例数量、合计容量</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>当虚拟机对 -dump 选项没有响应时，可以使用这个选项强制生成 dump 快照。只在 Liunx/Solaris 平台下有效</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jmap.html#CEGCECJB" target="_blank" rel="noopener">jmap</a>{:target=”_blank”}</em></strong></p>
+<h2 id="jhat"><a href="#jhat" class="headerlink" title="jhat"></a>jhat</h2><p>Sun JDK 提供 jhat（JVM Heap Analysis Tool）命令与 jmap 搭配使用，来分析 jmap 生成的堆转储快照。jhat 内置一个微型的 HTTP/HTML 服务器，生成 dump 文件的分析结果，可以再浏览器中查看。实际工作中一般不会直接使用 jhat 命令分析 dump 文件。原因有二：</p>
+<ol>
+<li>一般不会再部署应用服务器上直接分析 dump 文件，因为一般线上服务不会直接对方开放，无法通过 ip:port 的方式访问，而且分析工作是一个耗时而且消耗硬件资源的过程，既然都要在其他机器上进行，就没有必要收到命令行工具的限制了。</li>
+<li>jhat 分析功能相对简陋，JDK 提供的 VisualVM 以及专门用于分析 dump 文件的 Eclipse Memory Analyzer、IBM HeapAnalyzer 等工具，都能实现比 jhat 更加强大更加专业的分析功能。</li>
+</ol>
+<h3 id="执行样例-4"><a href="#执行样例-4" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jhat test.bin                         </span><br><span class="line">Reading from test.bin...</span><br><span class="line">Dump file created Sun Sep 30 16:43:55 CST 2018</span><br><span class="line">Snapshot <span class="built_in">read</span>, resolving...</span><br><span class="line">Resolving 1420442 objects...</span><br><span class="line">Chasing references, expect 284 dots............................................................................................................................................................................................................................................................................................</span><br><span class="line">Eliminating duplicate references............................................................................................................................................................................................................................................................................................</span><br><span class="line">Snapshot resolved.</span><br><span class="line">Started HTTP server on port 7000</span><br><span class="line">Server is ready.</span><br></pre></td></tr></table></figure>
+<p>分析结果截图如下：</p>
+<p><img src="/static/img/jhat-analysis.png" alt="jhat 的分析结果"></p>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jhat.html#CIHHJAGE" target="_blank" rel="noopener">jhat</a>{:target=”_blank”}</em></strong></p>
+<h2 id="jstack"><a href="#jstack" class="headerlink" title="jstack"></a>jstack</h2><p>jstack（Stack Trace for Java）命令用于生成虚拟机当前时刻的进程快照（一般称为 threaddump 或者 javacore 文件）。线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合，生成线程快照的主要目的是定位线程出现长时间停顿的原因，如线程间死锁、死循环、请求外部资源导致的长时间等待等都是导致线程长时间停顿的常见原因。线程出现停顿的时候通过 jstack 来查看各个线程的调用堆栈，就可以知道没有响应的线程到底在后台做些什么事情，活着等待着什么资源。</p>
+<h3 id="命令格式-4"><a href="#命令格式-4" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstack [option] vmid</span><br></pre></td></tr></table></figure>
+<h3 id="执行样例-5"><a href="#执行样例-5" class="headerlink" title="执行样例"></a>执行样例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ jstack -l 5838              </span><br><span class="line">2018-09-30 17:04:14</span><br><span class="line">Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.131-b11 mixed mode):</span><br><span class="line"></span><br><span class="line"><span class="string">"Attach Listener"</span> <span class="comment">#22 daemon prio=9 os_prio=31 tid=0x00007fa2989d5800 nid=0x2533 waiting on condition [0x0000000000000000]</span></span><br><span class="line">   java.lang.Thread.State: RUNNABLE</span><br><span class="line"></span><br><span class="line">   Locked ownable synchronizers:</span><br><span class="line">	- None</span><br><span class="line"></span><br><span class="line"><span class="string">"qtp323620444-21"</span> <span class="comment">#21 prio=5 os_prio=31 tid=0x00007fa2971c3800 nid=0xa503 waiting on condition [0x0000700010ae9000]</span></span><br><span class="line">   java.lang.Thread.State: TIMED_WAITING (parking)</span><br><span class="line">	at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">	- parking to <span class="built_in">wait</span> <span class="keyword">for</span>  &lt;0x000000079621d5d0&gt; (a java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>)</span><br><span class="line">	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)</span><br><span class="line">	at java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>.awaitNanos(AbstractQueuedSynchronizer.java:2078)</span><br><span class="line">	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:337)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool.idleJobPoll(QueuedThreadPool.java:517)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool.access<span class="variable">$600</span>(QueuedThreadPool.java:39)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool<span class="variable">$3</span>.run(QueuedThreadPool.java:563)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line"></span><br><span class="line">   Locked ownable synchronizers:</span><br><span class="line">	- None</span><br><span class="line"></span><br><span class="line"><span class="string">"qtp323620444-20"</span> <span class="comment">#20 prio=5 os_prio=31 tid=0x00007fa2984ac000 nid=0xa703 waiting on condition [0x00007000109e6000]</span></span><br><span class="line">   java.lang.Thread.State: TIMED_WAITING (parking)</span><br><span class="line">	at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">	- parking to <span class="built_in">wait</span> <span class="keyword">for</span>  &lt;0x000000079621d5d0&gt; (a java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>)</span><br><span class="line">	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)</span><br><span class="line">	at java.util.concurrent.locks.AbstractQueuedSynchronizer<span class="variable">$ConditionObject</span>.awaitNanos(AbstractQueuedSynchronizer.java:2078)</span><br><span class="line">	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:337)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool.idleJobPoll(QueuedThreadPool.java:517)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool.access<span class="variable">$600</span>(QueuedThreadPool.java:39)</span><br><span class="line">	at org.eclipse.jetty.util.thread.QueuedThreadPool<span class="variable">$3</span>.run(QueuedThreadPool.java:563)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line"></span><br><span class="line">   Locked ownable synchronizers:</span><br><span class="line">	- None</span><br></pre></td></tr></table></figure>
+<h3 id="主要选项-4"><a href="#主要选项-4" class="headerlink" title="主要选项"></a>主要选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-F</td>
+<td>当正常输出的请求不被响应时，强制输出线程堆栈</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>除了堆栈外，显示关于锁的附加信息</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>如果调用到本地方法的话，可以显示 C/C++ 的堆栈</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>命令相关选项及打印信息可参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html#BABGJDIF" target="_blank" rel="noopener">jstack</a>{:target=”_blank”}</em></strong></p>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/tools/">tools</a>
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2018/10/07/jvm-class-load/" rel="prev" title="JVM 类加载机制">
+						JVM 类加载机制 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2018/09/02/java-memory-allocation/" rel="next" title="Java 内存分配策略">
+						Java 内存分配策略
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'JVM 故障排查常用命令',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  var disqus_url = 'http://blog.zhangyong.io/2018/09/30/java-command/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>JVM 垃圾回收机制知识点整理 | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述Java 与 C++ 之间有一堵由动态分配和垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。说起 GC，大部分人都把这项技术当做 Java 语言的半生产物。事实上，GC 的历史比 Java 久远，1960 年诞生于 MIT 的 Lisp 是第一门真正使用内存动态分配和垃圾收集技术的语言。当 Lisp 还在胚胎时期时，人们就在思考 GC 需要完成的三件事：  那些内存需要回收">
+<meta name="keywords" content="Java,JVM,GC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM 垃圾回收机制知识点整理">
+<meta property="og:url" content="http://blog.zhangyong.io/2018/08/22/gc/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="概述Java 与 C++ 之间有一堵由动态分配和垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。说起 GC，大部分人都把这项技术当做 Java 语言的半生产物。事实上，GC 的历史比 Java 久远，1960 年诞生于 MIT 的 Lisp 是第一门真正使用内存动态分配和垃圾收集技术的语言。当 Lisp 还在胚胎时期时，人们就在思考 GC 需要完成的三件事：  那些内存需要回收">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/gc_roots.png">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/mark_clear.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/copying.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/mark_compact.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/garbage_collectors.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/serial_collector.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/parnew_collector.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/cms_collector.jpeg">
+<meta property="og:image" content="http://blog.zhangyong.io/static/img/g1_collector.jpeg">
+<meta property="og:updated_time" content="2018-12-09T07:40:17.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM 垃圾回收机制知识点整理">
+<meta name="twitter:description" content="概述Java 与 C++ 之间有一堵由动态分配和垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。说起 GC，大部分人都把这项技术当做 Java 语言的半生产物。事实上，GC 的历史比 Java 久远，1960 年诞生于 MIT 的 Lisp 是第一门真正使用内存动态分配和垃圾收集技术的语言。当 Lisp 还在胚胎时期时，人们就在思考 GC 需要完成的三件事：  那些内存需要回收">
+<meta name="twitter:image" content="http://blog.zhangyong.io/static/img/gc_roots.png">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-gc" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2018/08/22/gc/">
+    	JVM 垃圾回收机制知识点整理
+    </a>
+  </h2>
+	<time>
+	  Aug 22, 2018
+	</time>
+	
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
+
+	
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+ 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回收的对象"><span class="toc-number">2.</span> <span class="toc-text">回收的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用计数算法"><span class="toc-number">2.1.</span> <span class="toc-text">引用计数算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可达性分析算法"><span class="toc-number">2.2.</span> <span class="toc-text">可达性分析算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集算法"><span class="toc-number">3.</span> <span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-清除算法"><span class="toc-number">3.1.</span> <span class="toc-text">标记-清除算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制算法"><span class="toc-number">3.2.</span> <span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标记-整理算法"><span class="toc-number">3.3.</span> <span class="toc-text">标记-整理算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分代收集算法"><span class="toc-number">3.4.</span> <span class="toc-text">分代收集算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器"><span class="toc-number">4.</span> <span class="toc-text">垃圾收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-收集器"><span class="toc-number">4.1.</span> <span class="toc-text">Serial 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew-收集器"><span class="toc-number">4.2.</span> <span class="toc-text">ParNew 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Scavenge-收集器"><span class="toc-number">4.3.</span> <span class="toc-text">Parallel Scavenge 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-Old-收集器"><span class="toc-number">4.4.</span> <span class="toc-text">Serial Old 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Old-收集器"><span class="toc-number">4.5.</span> <span class="toc-text">Parallel Old 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS-收集器"><span class="toc-number">4.6.</span> <span class="toc-text">CMS 收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1-收集器"><span class="toc-number">4.7.</span> <span class="toc-text">G1 收集器</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Java 与 C++ 之间有一堵由动态分配和垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。说起 GC，大部分人都把这项技术当做 Java 语言的半生产物。事实上，GC 的历史比 Java 久远，1960 年诞生于 MIT 的 Lisp 是第一门真正使用内存动态分配和垃圾收集技术的语言。当 Lisp 还在胚胎时期时，人们就在思考 GC 需要完成的三件事：</p>
+<ul>
+<li>那些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>如何回收？</li>
+</ul>
+<a id="more"></a>
+<h2 id="回收的对象"><a href="#回收的对象" class="headerlink" title="回收的对象"></a>回收的对象</h2><p>首先肯定的是回收的对象应该是死了的，也就是说已经不会再被使用到的，回收活着的对象那不就会出现问题了嘛。如何判断对象是否还活着呢，算法有两种：</p>
+<ul>
+<li>引用计数算法</li>
+<li>可达性分析算法</li>
+</ul>
+<p>下面便具体看下这两种算法。</p>
+<h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><p>简单来说就是给对象中添加一个引用计数器，每当有一个地方引用它时，计数器的值加一；反之，如果引用失效时，则计数器的值减一；任何时刻计数器为 0 的对象就是不可能再被使用的。</p>
+<p>该算法<strong>实现简单，效率也高，</strong>但是<strong>无法解决对象间相互循环引用的问题</strong>，因此主流的 Java 虚拟机没有使用该算法来管理内存。栗子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferenceCountingGC</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testGC</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ReferenceCountingGC objA = <span class="keyword">new</span> ReferenceCountingGC();</span><br><span class="line">        ReferenceCountingGC objB = <span class="keyword">new</span> ReferenceCountingGC();</span><br><span class="line"></span><br><span class="line">        objA.instance = objB;</span><br><span class="line">        objB.instanct = objA;</span><br><span class="line"></span><br><span class="line">        objA = <span class="keyword">null</span>;</span><br><span class="line">        objB = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        * 假设这里发生 GC， objA 和 objB 时无法被回收的</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><p>该算法的基本思路是通过一系列的成为 “GC Roots” 的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径成为引用链，当一个对象到 GC Roots 没有任何引用链相连时，则证明此对象是不可用的。如果下图，虽然 object4，5，6 虽然互相有关联，但是他们是 GC Roots 不可达的，所以他们将会被判定为可以被回收的对象。</p>
+<p><img src="/static/img/gc_roots.png" alt="gc roots"></p>
+<p>Java 中，可以成为 GC Roots 的对象包括如下几种：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法去中累静态属性引用的对象</li>
+<li>方法区中敞亮引用的对象</li>
+<li>本地方法中 JNI （Native 方法）引用的对象</li>
+</ul>
+<h2 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h2><h3 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h3><p>该算时收集算法最基础的算法，之后的算法都是基于这种思路不断改进得到的。该算法分为“标记”和“清除”两个阶段：首先标记所有需要回收的对象，在标记完成后统一回收所有被标记的对象，而<strong>标记至少经过两次：如果对象在进行可达性分析后发现没有于 GC Roots 相连接的引用链，那它将会被第一次标记并且判断是否需要执行 finalize() 方法，如果没有覆盖 finlize() 方法，活着已经被虚拟机调用过，都不会被再次执行。</strong></p>
+<p>该算法主要有两点不足：<strong>一个是效率问题，递归和全堆对象遍历，而且在进行 GC 的时候，需要停止应用程序；另一个是空间问题，标记清除后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后再程序运行过程中需要分配较大对象时，无法找到足够连续的内存而不得不提前触发一次垃圾收集动作。</strong>示意图如下：</p>
+<p><img src="/static/img/mark_clear.jpeg" alt="标记清除算法示意图"></p>
+<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>为了解决效率问题，复制收集算法出现了，它将可用内存划分为大小相等的两等分，每次只在一块内存上进行分配，等到没有足够空间时，会先将存活的对象复制到另一块未使用的区域，然后将已使用过的内存区域一次清清理掉就好了。每次只回收半个内存区域，内存分配时也不用考虑内存碎片的问题了，只需要移动堆指针，按顺序分配内存即可。实现简单，运行高效；只是将内存缩小为原来的一半，会有很大的浪费。</p>
+<p><img src="/static/img/copying.jpeg" alt="复制收集算法示意图"></p>
+<p>经研究发现，大部分对象都是“朝生夕死”的，因此现在的商业虚拟机在回收新生代时，并没有按照 1:1 的比例来划分内存空间，而是将内存划分为了一块较大的 Eden 区和两块空间较小的 Survivor 空间，每次使用 Eden 区和一块 Survivor 。当内存不够需要进行回收时，只需要将两块内存中存活的对象复制到另一块 Survivor 中去，然后将 Eden 和已使用过的 Survivor 一次性清理掉即可。HotSpot 虚拟机默认的 Eden 和 Survivor 的大小比例是 8:1（可以使用参数 -XX:SurviorRation 配置比例），因此是会有 10% 的内存会被“浪费”掉。</p>
+<p>在特殊情况下，如果存活的对象所占内存大于 10% 的话，此时的 Survivor 内存空间不够容下这么多对象的，因此需要依赖老年代进行分配担保。如果另一块 Survivor 空间没有足够的空间存放上一次新生代收集下来的存活对象，这些对象将直接通过分配担保机制进入老年代。关于分配担保机制，在介绍垃圾收集器执行规则时会有更详细的介绍。</p>
+<h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>复制收集算法在对象存活率较高的时候就要进行较多的复制操作，效率会变低。更关键的是如果不想浪费 50% 的空间，就要有额外的空间进行分配担保，以应对使用的内存中 100% 对象都存活的极端情况，所以在老年代一般不能直接选中复制收集算法。</p>
+<p>根据老年的特点，提出了“标记-整理”算法，标记过程仍然与“标记-清除”算法一样，后续步骤不是直接对可回收的对象清理，而是将存活对象向一端移动，然后直接清除端边界以外的内存。</p>
+<p><img src="/static/img/mark_compact.jpeg" alt="标记整理算法示意图"></p>
+<h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>现在的商业虚拟机都是采用这种算法来进行垃圾回收的，该算法并没有什么新的思想，而是根据对象的存活周期将内存划分为几块，一般是把 Java 堆划分为新生代和老年代，然后根据各个代的特点采用最合适的收集算法。在新生代中进行垃圾回收时大部分对象都会死亡，只有小部分会存活下来，因此采用复制收集算法，而老年对象存活率较高且没有额外空间进行分配担保，因此采用“标记-清除”活着“标记-整理”算法进行回收。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>如果说垃圾回收算法是内存回收的方法论，那么垃圾收集器便是内存回收的具体实现。Java 虚拟机规范中对垃圾收集器应该如何实现没有任何规定，因此不同的厂商、不同的版本的虚拟机所提供的垃圾收集器都可能会有很大的差别，并且一般都会提供参数供用户根据自己的应用特点和要求组合出各个年代所使用的收集器。这里讨论的收集器基于 JDK 1.7 Update 14 之后的 Hotspot 虚拟机（在这个版本中正式提供了上用的 G1 收集器，之前 G1 仍处于实验状态），这个虚拟机包含了所有收集器如图所示。</p>
+<p><img src="/static/img/garbage_collectors.jpeg" alt="collectos"></p>
+<p>上图展示了作用于不同分带的收集器，如果两个收集器之间存在连线，就说明它们可以搭配使用。虚拟机所处的区域，则表示它是属于某个新生代收集器还是老年代收集器。到目前为止，还没有最好的收集器出现，更没有万能的收集器，因此我们需要对具体应用选择更合适的收集器。</p>
+<h3 id="Serial-收集器"><a href="#Serial-收集器" class="headerlink" title="Serial 收集器"></a>Serial 收集器</h3><p>Serial 收集器是一个单线程的收集器，“单线程”的意义不仅仅说明他只会会用一个 CPU 或一条收集线程区完成垃圾收集工作，更重要的是在他进行垃圾收集是，必须暂停其他所有的工作线程，直到他收集结束。这项工作是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常工作的线程全部停掉，这对很多应用来说都是很难接受的。</p>
+<p><img src="/static/img/serial_collector.jpeg" alt="serial"></p>
+<p>但它也有着由于其他收集器的地方：简单而高效（与其他收集器的单线程相比），对于限定单个 CPU 的环境来说，Serial 收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程收集效率。在用户的桌面应用场景中，分配给虚拟机管理的内存一般来说不会很大，收集几十兆甚至一两百兆的新生代（仅仅是新生代使用的内存，桌面应用基本上不会再大了），停顿时间完全可以控制在几十毫秒最多一百多毫秒以内，只要不频繁发生，这点停顿是可以接受的。所有，Serial 收集器对于运行在 Client 模式下的虚拟机来说是一个很好的选择。</p>
+<h3 id="ParNew-收集器"><a href="#ParNew-收集器" class="headerlink" title="ParNew 收集器"></a>ParNew 收集器</h3><p>ParNew 收集器其实就是 Serial 收集器的多线程版本，其余行为都与 Serial 收集器完全一样，实现上，这两种收集器也共用了相当多的代码。ParNew 收集器的工作过程如图所示。</p>
+<p><img src="/static/img/parnew_collector.jpeg" alt="ParNew"></p>
+<p>ParNew 收集器除了多线程收集外，其他没有与 Serial 收集器相比并没有太多创新之处，但它是除了 Serial 收集器之外，目前只有它能与 CMS 收集器配合工作。使用 -XX:UseConcMarkSweepGC 选项后的默认新生代收集器便是 ParNew 收集器，也可以使用 -XX:UseParNewGC 选项来强制指定它。ParNew 收集器在单 CPU 的环境中绝不会有比 Serial 收集器更好的效果，甚至由于存在线程交互的开销，该收集器再通过超线程技术实现的两个 CPU 的环境中多不能百分之百保证可以超越 Serial 收集器。当然，随着可以使用 CPU 的数量增加，他对于 GC 时系统资源的有效利用还是很有好处的。</p>
+<h3 id="Parallel-Scavenge-收集器"><a href="#Parallel-Scavenge-收集器" class="headerlink" title="Parallel Scavenge 收集器"></a>Parallel Scavenge 收集器</h3><p>新生代收集器，也是使用复制算法，并行的多线程收集器，但是该收集器的目标是达到一个可控制的吞吐量。所谓的吞吐量就是 CPU 用于运行用户代码的时间与 CPU 总消耗时间的比值，即吞吐量=运行用代码时间/（运行用户代码时间+垃圾收集时间）。</p>
+<p>Parallel Scavenge 收集器提供了两个参数用于精确控制吞吐量，分别是控制最大垃圾收集停顿时间的 -XX:MaxGCPauseMillis 参数以及直接设置吞吐量大小的 -XX:GCTimeRatio 参数。MaxGCPauseMillis 参数允许的值是一个大于 0 的毫秒数，收集器将尽可能地保证内存回收花费的时间不超过设定值。GC 停顿时间缩短是以牺牲吞吐量和新生代空间换区的：新生代的大小跟用户线程最大停顿值是成正比，跟收集时间成反比的，新生代的内存越小，收集的时间越快，收集的次数越多，吞吐量也会降下来。</p>
+<p>收集器还有一个参数 -XX:+UseAdaptiveSizePolicy 值得关注，这是一个开关参数，这个参数打开后，就不需要手工设置新生代的大小、Eden 和 Survivor 区的比例、晋升老年代对象大小等细节参数了，虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间或者最大的吞吐量，这种调节方式成为 GC 自适应的调节策略。</p>
+<h3 id="Serial-Old-收集器"><a href="#Serial-Old-收集器" class="headerlink" title="Serial Old 收集器"></a>Serial Old 收集器</h3><p>Serial Old 是 Serial 收集器的老年代版本，单线程收集器，使用“标记-整理”算法。主要意义也是在于给 Client 模式下的虚拟机使用。如果在 Server 模式下，他还有两大主要用途：</p>
+<ul>
+<li>在 JDK 1.5 以及之前的版本中与 Parallel Scavenge 收集器搭配使用。</li>
+<li>作为 CMS 收集器的后备预案，在并发收集发生 Concurrent Mode Failure 时使用。</li>
+</ul>
+<p>执行流程与 Serial 收集器完全一致。</p>
+<h3 id="Parallel-Old-收集器"><a href="#Parallel-Old-收集器" class="headerlink" title="Parallel Old 收集器"></a>Parallel Old 收集器</h3><p>Parallel Scavenge 收集器的老年代版本，执行流程与 Parallel Scavenge 收集器完全一致。解决了如果新生代使用了 Parallel Scavenge 收集器老年代只能使用 Serial Old 收集器的尴尬境地。</p>
+<h3 id="CMS-收集器"><a href="#CMS-收集器" class="headerlink" title="CMS 收集器"></a>CMS 收集器</h3><p>CMS（Concurrent Mark Sweep）收集器是一种以获取最短回收停顿时间为目标的收集器。大部分应用在互联网站活着 B/S 系统的服务端上。从名字就可以看出，CMS 收集器是基于“标记-清除”算法的实现的，运行过程分为四个步骤：</p>
+<ol>
+<li>初始标记（CMS initial mark）</li>
+<li>并发标记（CMS concurrent mark）</li>
+<li>重新标记（CMS remark）</li>
+<li>并发清除（CMS concurrent sweep）</li>
+</ol>
+<p>初始标记、重新标记这两个步骤仍需要“Stop The World”。初始标记仅仅只是标记一下 GC Roots 能直接关联到的对象，速度很快，并发标记阶段就是进行 GC Roots Tracing 的过程，而重新标记阶段是为了修正并发标记期间因用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长些，但远比并发标记时间段。由于整个过程耗时最长的并发标记和并发清除过程收集器线程都可以与用户线程一起工作，所以总体上来说，CMS 收集器的内存回收过程是与用户线程一起并发执行的。</p>
+<p><img src="/static/img/cms_collector.jpeg" alt="CMS"></p>
+<p>总体来说 CMS 收集器的有点便是：并发收集、低停顿。但是也有三个明显的缺点：</p>
+<ul>
+<li>对 CPU 资源敏感，在并发阶段，虽然不会导致用户进程停顿，但是引用占用一部分线程（或者说 CPU 资源）而导致应用程序变慢，总吞吐量降低。</li>
+<li>无法处理浮动垃圾，可能会出现 “Concurrent Mode Failure” 失败而导致另一次 Full GC 的产生。有 CMS 并发清理阶段用户线程还在运行，伴随程序运行自然就还会有新的垃圾不断产生，这一部分垃圾出现在标记过程之后，CMS无法再档次收集中处理掉它们，只好留待下一次 GC 时在清理掉。而且 CMS 需要预留一部分空间提供并发收集时的程序运作使用，所以当老年代使用了一定空间后 CMS 就会被激活，这个阈值是通过参数 -XX:CMSInitiatingOccupancyFraction 来控制的，如果 CMS 运行期间预留的内存无法满足程序需要，就会出现一次 “Concurrent Model Failure” 失败，这时虚拟机将启动后备预案：临时启用 Serial Old 收集器来重新进行老年代的垃圾收集，这样停顿的时间就很长了。因此 -XX:CMSInitiatingOccupancyFraction 参数值如果设置的太高就容易导致大量 “Concurrent Mode Failure”失败，性能反而降低。</li>
+<li>CMS 收集器是基于 “标记-清除” 算法实现的收集器，就意味着收集结束后会产生大量内存碎片。当老年代还有很大剩余空间，但无法找到足够大的连续内存空间分配当前对象，不得不提前出发 Full GC。CMS 收集器提供了一个 -XX:+UseCMSCompactAtFullCollection 开关参数（默认开启），用于在 CMS 收集器顶不住要进行 Full GC 时开启内存碎片的整理过程，内存整的过程是无法并发的，从而导致停顿时间变长。虚拟机还设置了参数 -XX:CMSFullGCBeforeCompaction 用于设置多少次不压缩的 Full GC 后，跟着来一次带压缩（默认0，每次 Full GC都进行随便整理）</li>
+</ul>
+<h3 id="G1-收集器"><a href="#G1-收集器" class="headerlink" title="G1 收集器"></a>G1 收集器</h3><p>G1 垃圾收集器的是一款面向服务端的垃圾收集器，他的使命是（在比较长期的）未来可以替换掉 CMS 垃圾收集器，。与其他 GC 收集器相比，G1 收集器具备如下特点：</p>
+<ul>
+<li>并行与并发，充分利用多 CPU，多核环境下的硬件优势，使用多个 CPU（CPU或者CPU核心）来缩短 Stop-The-World 停顿的时间。</li>
+<li>分代收集，不需要其他收集器配合就能独立管理整个 Java 堆。</li>
+<li>空间整合：G1运行期间不会产生内存碎片，收集后能提供规整的可用内存。</li>
+<li>可预测的停顿：见了可预测的停顿时间模型，让使用者指定在一个长度为 M 毫秒的时间片段内，消耗在垃圾收集上的时间不超过 N 毫秒。</li>
+</ul>
+<p>使用 G1 收集器时，Java 堆的内存布局就与其他收集器有很大差别，将整个 Java 堆划分为多个大小的相等的独立区域（Region），新生代与老年代不再是物理隔离，他们都是 Region（不需要连续）的集合。G1收集器 跟踪各个 Region 里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需要的时间的经验值，）在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的 Region。</p>
+<p>在使用 G1 收集器中，Region 之间的对象引用以及其他收集器中的新生代与老年代之间的对象引用，虚拟机都是使用 Remembered Set 来避免全堆扫描的。G1 每个 Region 都有一个与只对应的 Remember Set，虚拟机发现程序在对 Reference 类型的数据进行写操作时，会产生一个Write Barrier 暂时中断写操作，检查 Reference 引用的对象是否处于不同的 Region 之中（在分代的例子中就是检查是否是老年代中的对象引用了新生代中的对象），如果是便通过 CardTable 把相关引用信息记录到被引用对象所述的 Region 的 Remember Set 中。当进行内存回收时，在 GC 根节点的枚举范围中加入 Remember Set 即可保证不对全堆扫描页不会有遗漏。</p>
+<p>如果不计算维护 Remember Set 的操作，G1 收集器的运作大致可划分为如下几个步骤：</p>
+<ol>
+<li>初始标记（Initial Marking）</li>
+<li>并发标记（Concurrent Marking）</li>
+<li>最终标记（Final Marking）</li>
+<li>筛选回收（Live Data Counting and Evacuation）</li>
+</ol>
+<p>前三个步骤可以说与 CMS 收集器的执行步骤一致，最后 筛选回收 首先对各个 Region 的回收价值和成本进行排序，根据用户所期望的 GC 停顿时间来指定回收计划。因为只回收一部分 Region，时间是用户可控制的，且停顿用户线程将大幅度提升效率。执行示意图如下：</p>
+<p><img src="/static/img/g1_collector.jpeg" alt="g1 collector"></p>
+<p>ps: 以上知识点整理自 《深入理解 Java 虚拟机—JVM 高级特性与最佳实践》。</p>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/Java/">Java</a>
+      
+        <a href="/tags/JVM/">JVM</a>
+      
+        <a href="/tags/GC/">GC</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2018/08/22/java-reference/" rel="prev" title="Java Reference &amp; ReferenceQueue">
+						Java Reference &amp; ReferenceQueue 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2018/08/04/concurrenthashmap/" rel="next" title="ConcurrentHashMap 简述(JDK 1.8)">
+						ConcurrentHashMap 简述(JDK 1.8)
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'JVM 垃圾回收机制知识点整理',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  var disqus_url = 'http://blog.zhangyong.io/2018/08/22/gc/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Java 位运算 | BOOM</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="google-site-verification" content="3UHSneOMPRAJt1N09CYXn4dj3AclFA7MEOOvf9gSMx8">
+  <meta name="baidu-site-verification" content="NCs1SEY6Vm">
+  <link href="https://fontawesome.com/v3.2.1/assets/font-awesome/css/font-awesome.css">
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129298518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-129298518-1');
+</script>
+  
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="BOOM">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="移位、位与、或、异或、非">
+<meta name="keywords" content="radix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 位运算">
+<meta property="og:url" content="http://blog.zhangyong.io/2017/06/22/java-bit-operations/index.html">
+<meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="移位、位与、或、异或、非">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-09T07:40:05.129Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 位运算">
+<meta name="twitter:description" content="移位、位与、或、异或、非">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <style>
+    .view_count {
+      color: #b5b5b5;
+      font-size: .9rem;
+      padding-left: 9px;
+    }
+    .view_count i {
+      vertical-align: middle;
+    }
+    .icon-eye:before {
+      content: "\e9ce";
+    }
+  </style>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href="/">
+				BOOM
+			</a>
+			<div class="menu">
+				<ul class="h-list">
+					
+						<li>
+							<a class="flat-box nav-" href="/">
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-HOME" href="/">
+								
+							</a>
+						</li>
+					
+						<li>
+							<a class="flat-box nav-about" href="/about">
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class="underline"></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search">
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class="nav-sub container container--flex">
+			<a class="logo" href="javascript:void(0)">
+				Word of Forks
+			</a>
+
+			<ul class="switcher h-list">
+				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-vertical_align_top flat-box"></span></a></li>
+				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-java-bit-operations" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2017/06/22/java-bit-operations/">
+    	Java 位运算
+    </a>
+  </h2>
+	<time>
+	  Jun 22, 2017
+	</time>
+	
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
+
+	
+    
+    <div class="cats">
+        <a href="/categories/code/">code</a>
+    </div>
+ 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#移位（左移和右移）"><span class="toc-number">2.</span> <span class="toc-text">移位（左移和右移）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code"><span class="toc-number">2.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑"><span class="toc-number">2.2.</span> <span class="toc-text">执行逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无符号右移"><span class="toc-number">3.</span> <span class="toc-text">无符号右移</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-1"><span class="toc-number">3.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑-1"><span class="toc-number">3.2.</span> <span class="toc-text">执行逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-gt-gt-gt-2"><span class="toc-number">3.2.1.</span> <span class="toc-text">5&gt;&gt;&gt;2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-gt-gt-2"><span class="toc-number">3.2.2.</span> <span class="toc-text">-5&gt;&gt;2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-gt-gt-gt-2-1"><span class="toc-number">3.2.3.</span> <span class="toc-text">-5&gt;&gt;&gt;2</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#位与-amp"><span class="toc-number">4.</span> <span class="toc-text">位与 &amp;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-2"><span class="toc-number">4.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑-2"><span class="toc-number">4.2.</span> <span class="toc-text">执行逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#位或"><span class="toc-number">5.</span> <span class="toc-text">位或 |</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-3"><span class="toc-number">5.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑-3"><span class="toc-number">5.2.</span> <span class="toc-text">执行逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#位异或"><span class="toc-number">6.</span> <span class="toc-text">位异或</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-4"><span class="toc-number">6.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑-4"><span class="toc-number">6.2.</span> <span class="toc-text">执行逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#位非-一元操作符"><span class="toc-number">7.</span> <span class="toc-text">位非 ~ (一元操作符)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-5"><span class="toc-number">7.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行逻辑-5"><span class="toc-number">7.2.</span> <span class="toc-text">执行逻辑</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>左移 <strong>&lt;&lt;</strong></li>
+<li>右移 <strong>&gt;&gt;</strong></li>
+<li>无符号右移 <strong>&gt;&gt;&gt;</strong></li>
+<li>位与 <strong>&amp;</strong></li>
+<li>位或 <strong>|</strong></li>
+<li>位非 <strong>~</strong></li>
+<li>位异或 <strong>^</strong></li>
+</ul>
+<blockquote>
+<p><code>~</code> 为一元操作符外，其他的都是二元操作符。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="移位（左移和右移）"><a href="#移位（左移和右移）" class="headerlink" title="移位（左移和右移）"></a>移位（左移和右移）</h2><h3 id="code"><a href="#code" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="number">5</span> &lt;&lt; <span class="number">2</span>); <span class="comment">//result 20</span></span><br><span class="line">  System.out.println(<span class="number">5</span> &gt;&gt; <span class="number">2</span>); <span class="comment">//result 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑"><a href="#执行逻辑" class="headerlink" title="执行逻辑"></a>执行逻辑</h3><ol>
+<li>将 5 转换为二进制（java int 类型为32位）：00000000000000000000000000000101</li>
+<li>左移的逻辑为将二进制结果左移两位，低位补 0：000000000000000000000000000101<strong>00</strong>，右移则将二进制结果右移两位，高位补0，其结果为：<strong>00</strong>000000000000000000000000000001</li>
+<li>将二进制结果转换为十进制</li>
+</ol>
+<h2 id="无符号右移"><a href="#无符号右移" class="headerlink" title="无符号右移"></a>无符号右移</h2><h3 id="code-1"><a href="#code-1" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="number">5</span> &gt;&gt;&gt; <span class="number">2</span>);   <span class="comment">//result 1</span></span><br><span class="line">  System.out.println(-<span class="number">5</span> &gt;&gt; <span class="number">2</span>);   <span class="comment">//result -2</span></span><br><span class="line">  System.out.println(-<span class="number">5</span> &gt;&gt;&gt; <span class="number">2</span>);  <span class="comment">//result 1073741822</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑-1"><a href="#执行逻辑-1" class="headerlink" title="执行逻辑"></a>执行逻辑</h3><h4 id="5-gt-gt-gt-2"><a href="#5-gt-gt-gt-2" class="headerlink" title="5&gt;&gt;&gt;2"></a>5&gt;&gt;&gt;2</h4><ol>
+<li>5 转为二进制：00000000 00000000 00000000 00000101</li>
+<li>右移 2 位得到：<strong>00</strong>000000 00000000 00000000 00000001(高位补0)</li>
+<li>二进制转换为十进制结果为 1</li>
+</ol>
+<h4 id="5-gt-gt-2"><a href="#5-gt-gt-2" class="headerlink" title="-5&gt;&gt;2"></a>-5&gt;&gt;2</h4><ol>
+<li>得出 -5 的补码：11111111 11111111 11111111 11111011</li>
+<li>右移 2 位得到：<strong>11</strong>111111 11111111 11111111 11111110(高位补1)</li>
+<li>将 11111111 11111111 11111111 11111110 转换为原码：10000000 00000000 00000000 00000010</li>
+<li>二进制原码转换为十进制：-2</li>
+</ol>
+<h4 id="5-gt-gt-gt-2-1"><a href="#5-gt-gt-gt-2-1" class="headerlink" title="-5&gt;&gt;&gt;2"></a>-5&gt;&gt;&gt;2</h4><ol>
+<li>得出 -5 的补码：11111111 11111111 11111111 11111011</li>
+<li>右移 2 位得到：<strong>00</strong>111111 11111111 11111111 11111110(高位补0)</li>
+<li>当做原码转为十进制：1073741822</li>
+</ol>
+<h2 id="位与-amp"><a href="#位与-amp" class="headerlink" title="位与 &amp;"></a>位与 &amp;</h2><h3 id="code-2"><a href="#code-2" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line"> System.out.println(<span class="number">5</span> &amp; <span class="number">3</span>); <span class="comment">//result 1</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑-2"><a href="#执行逻辑-2" class="headerlink" title="执行逻辑"></a>执行逻辑</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">5 = 00000000 00000000 00000000 00000101(2)</span><br><span class="line">3 = 00000000 00000000 00000000 00000011(2)</span><br><span class="line">------------------------------------------</span><br><span class="line">1 = 00000000 00000000 00000000 00000001(2)</span><br></pre></td></tr></table></figure>
+<p> 第一个操作数的的第n位与第二个操作数的第n位如果都是1，那么结果的第n位也为1，否则为0</p>
+<h2 id="位或"><a href="#位或" class="headerlink" title="位或 |"></a>位或 |</h2><h3 id="code-3"><a href="#code-3" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">  System.out.println(<span class="number">5</span> | <span class="number">3</span>); <span class="comment">//result 7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑-3"><a href="#执行逻辑-3" class="headerlink" title="执行逻辑"></a>执行逻辑</h3><p>第一个操作数的的第n位与第二个操作数的第n位如果有一个是1，那么结果的第n位也为1，否则为0</p>
+<h2 id="位异或"><a href="#位异或" class="headerlink" title="位异或"></a>位异或</h2><h3 id="code-4"><a href="#code-4" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">  System.out.println(<span class="number">5</span> ^ <span class="number">3</span>); <span class="comment">//result 6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑-4"><a href="#执行逻辑-4" class="headerlink" title="执行逻辑"></a>执行逻辑</h3><p>第一个操作数的的第n位与第二个操作数的第n位 <strong>相反</strong>，那么结果的第n为也为1，否则为0</p>
+<h2 id="位非-一元操作符"><a href="#位非-一元操作符" class="headerlink" title="位非 ~ (一元操作符)"></a>位非 ~ (一元操作符)</h2><h3 id="code-5"><a href="#code-5" class="headerlink" title="code"></a>code</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">  System.out.println(~<span class="number">7</span>); <span class="comment">//result -6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行逻辑-5"><a href="#执行逻辑-5" class="headerlink" title="执行逻辑"></a>执行逻辑</h3><p>操作数的第n位为1，那么结果的第n位为0，反之。</p>
+<hr>
+<blockquote>
+<p>二进制原码、反码、补码间转换参考：<a href="/2017-06-17/binary-in-computer/" target="_bank">计算机中的二进制</a></p>
+</blockquote>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/radix/">radix</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/06/28/nexus/" rel="prev" title="maven 私服搭建">
+						maven 私服搭建 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2017/06/17/binary-in-computer/" rel="next" title="计算机中的二进制">
+						计算机中的二进制
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'Java 位运算',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class="m_widget about">
+
+<div class="header">Boom</div>
+<div class="content">
+<div class="desc">去学习，去经历，去思考</div>
+</div>
+</section>
+
+  <section class="m_widget links">
+<div class="header">Links</div>
+<div class="content">
+    <ul class="entry">
+    
+    </ul>
+</div>
+</section>
+
+  <section class="m_widget categories">
+<div class="header">Categories</div>
+<div class="content">
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/code/"><div class="name">code</div><div class="badget">37</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/life/"><div class="name">life</div><div class="badget">1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class="content">
+        <a href="/tags/DB/" style="font-size: 14.86px; color: #6e6e6e">DB</a> <a href="/tags/GC/" style="font-size: 15.71px; color: #5b5b5b">GC</a> <a href="/tags/JVM/" style="font-size: 19.14px; color: #121212">JVM</a> <a href="/tags/Java/" style="font-size: 20px; color: #000">Java</a> <a href="/tags/Spring/" style="font-size: 14px; color: #808080">Spring</a> <a href="/tags/algorithm/" style="font-size: 16.57px; color: #494949">algorithm</a> <a href="/tags/class-load/" style="font-size: 16.57px; color: #494949">class-load</a> <a href="/tags/collections/" style="font-size: 17.43px; color: #373737">collections</a> <a href="/tags/concurrency/" style="font-size: 18.29px; color: #252525">concurrency</a> <a href="/tags/desgin-pattern/" style="font-size: 14px; color: #808080">desgin-pattern</a> <a href="/tags/garbage/" style="font-size: 14px; color: #808080">garbage</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/linux/" style="font-size: 14.86px; color: #6e6e6e">linux</a> <a href="/tags/maven/" style="font-size: 14.86px; color: #6e6e6e">maven</a> <a href="/tags/nexus/" style="font-size: 14px; color: #808080">nexus</a> <a href="/tags/radix/" style="font-size: 15.71px; color: #5b5b5b">radix</a> <a href="/tags/source-code/" style="font-size: 17.43px; color: #373737">source-code</a> <a href="/tags/tools/" style="font-size: 16.57px; color: #494949">tools</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/boomyyyy" class="social github" target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  <div>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span id="">本站总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+  </div>  
+  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = 'boomyyyy';
+  
+  var disqus_url = 'http://blog.zhangyong.io/2017/06/22/java-bit-operations/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

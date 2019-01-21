@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/12/29/2019flag/</loc>
+    
+    <lastmod>2019-01-21T07:08:45.184Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2019/01/01/springIoc/</loc>
+    
+    <lastmod>2019-01-21T07:08:20.767Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2019/01/15/singleton-pattern/</loc>
+    
+    <lastmod>2019-01-21T07:08:00.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/14/this-and-ClassName-this/</loc>
+    
+    <lastmod>2019-01-01T04:41:29.269Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/10/07/jvm-class-load/</loc>
+    
+    <lastmod>2018-12-29T14:26:45.624Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/about/index.html</loc>
+    
+    <lastmod>2018-12-22T02:57:44.274Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/12/08/thread-pool-executor-exec-process/</loc>
+    
+    <lastmod>2018-12-09T07:46:26.392Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/11/04/java-and-thread/</loc>
+    
+    <lastmod>2018-12-09T07:40:25.162Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/11/03/java-memory-model-and-thread/</loc>
+    
+    <lastmod>2018-12-09T07:40:24.345Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/10/21/jvm-invoke-method/</loc>
+    
+    <lastmod>2018-12-09T07:40:23.462Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/10/14/jvm-method-exec/</loc>
+    
+    <lastmod>2018-12-09T07:40:22.665Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/10/13/class-loader/</loc>
+    
+    <lastmod>2018-12-09T07:40:21.811Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/09/30/java-command/</loc>
+    
+    <lastmod>2018-12-09T07:40:19.914Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/09/02/java-memory-allocation/</loc>
+    
+    <lastmod>2018-12-09T07:40:19.094Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/08/22/java-reference/</loc>
+    
+    <lastmod>2018-12-09T07:40:18.451Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/08/22/gc/</loc>
+    
+    <lastmod>2018-12-09T07:40:17.397Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/08/04/concurrenthashmap/</loc>
+    
+    <lastmod>2018-12-09T07:40:16.582Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/08/04/treemap/</loc>
+    
+    <lastmod>2018-12-09T07:40:15.796Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/08/04/linkedhashmap/</loc>
+    
+    <lastmod>2018-12-09T07:40:14.980Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/07/13/hashmap/</loc>
+    
+    <lastmod>2018-12-09T07:40:14.182Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/07/10/Java-data-structure/</loc>
+    
+    <lastmod>2018-12-09T07:40:13.381Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/07/01/mysql-utf8mb4/</loc>
+    
+    <lastmod>2018-12-09T07:40:12.478Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/11/04/jvm-memory-model/</loc>
+    
+    <lastmod>2018-12-09T07:40:11.611Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/08/02/maven-set-jdk-version/</loc>
+    
+    <lastmod>2018-12-09T07:40:10.661Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/07/26/insertion-sort/</loc>
+    
+    <lastmod>2018-12-09T07:40:09.662Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/07/25/selection-sort/</loc>
+    
+    <lastmod>2018-12-09T07:40:08.813Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/07/24/no-status-login/</loc>
+    
+    <lastmod>2018-12-09T07:40:07.929Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/30/binary-tree-order-rec/</loc>
+    
+    <lastmod>2018-12-09T07:40:06.962Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/28/nexus/</loc>
+    
+    <lastmod>2018-12-09T07:40:06.046Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/22/java-bit-operations/</loc>
+    
+    <lastmod>2018-12-09T07:40:05.129Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/17/radix-cast/</loc>
+    
+    <lastmod>2018-12-09T07:40:04.289Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/17/binary-in-computer/</loc>
+    
+    <lastmod>2018-12-09T07:40:03.396Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/15/sql-type/</loc>
+    
+    <lastmod>2018-12-09T07:40:02.512Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/11/gitlab-install/</loc>
+    
+    <lastmod>2018-12-09T07:40:00.929Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/10/linux-ssh/</loc>
+    
+    <lastmod>2018-12-09T07:40:00.085Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/09/fibonacci/</loc>
+    
+    <lastmod>2018-12-09T07:39:59.156Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2017/06/05/linux-chown-chgrp/</loc>
+    
+    <lastmod>2018-12-09T07:39:55.327Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/11/10/thread-safe/</loc>
+    
+    <lastmod>2018-12-09T07:38:34.882Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/googled7192017cd1fd107.html</loc>
+    
+    <lastmod>2018-12-09T05:25:49.763Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.zhangyong.io/2018/11/11/thread-pool-executor/</loc>
+    
+    <lastmod>2018-12-08T07:00:14.971Z</lastmod>
+    
+  </url>
+  
+</urlset>
