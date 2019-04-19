@@ -3,6 +3,25 @@
   
     
     <entry>
+      <title>面试笔记之网络</title>
+      <link href="/2019/04/02/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BD%91%E7%BB%9C/"/>
+      <url>/2019/04/02/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BD%91%E7%BB%9C/</url>
+      
+        <content type="html"><![CDATA[<h2 id="OSGi-七层协议"><a href="#OSGi-七层协议" class="headerlink" title="OSGi 七层协议"></a>OSGi 七层协议</h2><h3 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h3><p>Q:数模转换？</p><h3 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h3>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> network </tag>
+            
+            <tag> interview </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>单例模式</title>
       <link href="/2019/01/15/singleton-pattern/"/>
       <url>/2019/01/15/singleton-pattern/</url>
@@ -321,9 +340,9 @@
       
         <tags>
             
-            <tag> tools </tag>
-            
             <tag> Java </tag>
+            
+            <tag> tools </tag>
             
             <tag> JVM </tag>
             
@@ -610,9 +629,9 @@
       
         <tags>
             
-            <tag> tools </tag>
-            
             <tag> Java </tag>
+            
+            <tag> tools </tag>
             
             <tag> maven </tag>
             
@@ -637,9 +656,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> algorithm </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -662,9 +681,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> algorithm </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -710,9 +729,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> algorithm </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -925,9 +944,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> algorithm </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       

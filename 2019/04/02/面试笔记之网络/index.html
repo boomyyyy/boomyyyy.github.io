@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Archives: 2017/8 | BOOM</title>
+  <title>面试笔记之网络 | BOOM</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
   <meta name="HandheldFriendly" content="True">
@@ -25,13 +25,18 @@
   <link rel="shortcut icon" href="/">
   <link rel="alternate" href="/atom.xml" title="BOOM">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="BOOM">
-<meta property="og:url" content="http://blog.zhangyong.io/archives/2017/08/index.html">
+  <meta name="description" content="OSGi 七层协议物理层Q:数模转换？ 数据链路层">
+<meta name="keywords" content="network,interview">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试笔记之网络">
+<meta property="og:url" content="http://blog.zhangyong.io/2019/04/02/面试笔记之网络/index.html">
 <meta property="og:site_name" content="BOOM">
+<meta property="og:description" content="OSGi 七层协议物理层Q:数模转换？ 数据链路层">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-02T09:11:47.816Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BOOM">
+<meta name="twitter:title" content="面试笔记之网络">
+<meta name="twitter:description" content="OSGi 七层协议物理层Q:数模转换？ 数据链路层">
     
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -152,75 +157,62 @@
   <div class="l_body">
     <div class='container clearfix'>
       <div class='l_main'>
-        
+        <article id="post-面试笔记之网络" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+	<section class="meta">
+	<h2 class="title">
+  	<a href="/2019/04/02/面试笔记之网络/">
+    	面试笔记之网络
+    </a>
+  </h2>
+	<time>
+	  Apr 2, 2019
+	</time>
 	
-<script>
-  window.subData = { title: 'Year : 2017.8' }
-  var title = 'Year : 2017.8'
-</script>
+	<span class="view_count"><i class="icon icon-visibility"></i><span id="busuanzi_value_page_pv"></span></span>
 
-<article id="archive-page" class="post article white-box">
-    <section class="meta">
-        <h2 class="title">
-          <a id="title">
-          </a>
-        </h2>
-      </section>
-  <section class="archive">
-    
-    <!-- <div class='post-wrapper'>
-      <article class="post reveal">
-  <section class="meta">
-    
-    <h2 class="title">
-      <a href="/2017/08/02/maven-set-jdk-version/">
-        maven 配置 jdk 版本
-      </a>
-    </h2>
-    
-    <time>
-      Aug 2, 2017
-    </time>
-		
-    
-    <div class="cats">
-        <a href="/categories/code/">code</a>
-    </div>
-
-  </section>
-  <section class="article typo">
-	  <a id="more"></a>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-    
-    
-    
-	  <div class="full-width auto-padding tags">
+	 
+	
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OSGi-七层协议"><span class="toc-number">1.</span> <span class="toc-text">OSGi 七层协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#物理层"><span class="toc-number">1.1.</span> <span class="toc-text">物理层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据链路层"><span class="toc-number">1.2.</span> <span class="toc-text">数据链路层</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="OSGi-七层协议"><a href="#OSGi-七层协议" class="headerlink" title="OSGi 七层协议"></a>OSGi 七层协议</h2><h3 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h3><p>Q:数模转换？</p>
+<h3 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h3>
+  	</div>
+	  
+	  <div class="article-tags tags">
       
-        <a href="/tags/Java/">Java</a>
+        <a href="/tags/network/">network</a>
       
-        <a href="/tags/tools/">tools</a>
-      
-        <a href="/tags/maven/">maven</a>
+        <a href="/tags/interview/">interview</a>
       
 	  </div>
     
-  </section>
+		
+	
+		<div class="art-item-footer">
+				
+				
+					<span class="art-item-right">next：<a href="/2019/01/15/singleton-pattern/" rel="next" title="单例模式">
+						单例模式
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
 </article>
-    </div> -->
-    <div class="archive-item archive-post mark">
-            <a href="/2017/08/02/maven-set-jdk-version/">
-              <time>2017-08-02</time>
-              <span class="title"><span>maven 配置 jdk 版本</span></span>
-            </a>
-          </div>
-    
-  </section>
-</article>
-
 <script>
-document.getElementById('title').text=window.subData.title
+	window.subData = {
+		title: '面试笔记之网络',
+		tools: true
+	}
 </script>
 
       </div>
@@ -301,11 +293,13 @@ document.getElementById('title').text=window.subData.title
 <script>
   var disqus_shortname = 'boomyyyy';
   
+  var disqus_url = 'http://blog.zhangyong.io/2019/04/02/面试笔记之网络/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
