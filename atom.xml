@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.zhangyong.io/"/>
-  <updated>2019-04-02T09:11:47.816Z</updated>
+  <updated>2019-06-18T08:38:52.308Z</updated>
   <id>http://blog.zhangyong.io/</id>
   
   <author>
@@ -17,27 +17,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>面试笔记之网络</title>
-    <link href="http://blog.zhangyong.io/2019/04/02/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BD%91%E7%BB%9C/"/>
-    <id>http://blog.zhangyong.io/2019/04/02/面试笔记之网络/</id>
-    <published>2019-04-02T09:07:33.000Z</published>
-    <updated>2019-04-02T09:11:47.816Z</updated>
+    <title>sed 命令总结</title>
+    <link href="http://blog.zhangyong.io/2019/06/18/sed/"/>
+    <id>http://blog.zhangyong.io/2019/06/18/sed/</id>
+    <published>2019-06-18T08:10:47.000Z</published>
+    <updated>2019-06-18T08:38:52.308Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="OSGi-七层协议"><a href="#OSGi-七层协议" class="headerlink" title="OSGi 七层协议"></a>OSGi 七层协议</h2><h3 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h3><p>Q:数模转换？</p><h3 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h3>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>sed全称是：Stream EDitor，通过名字可以看出是一种流式编辑器，可以实现查找、替换、删除功能。</p></blockquote>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h2 id=&quot;OSGi-七层协议&quot;&gt;&lt;a href=&quot;#OSGi-七层协议&quot; class=&quot;headerlink&quot; title=&quot;OSGi 七层协议&quot;&gt;&lt;/a&gt;OSGi 七层协议&lt;/h2&gt;&lt;h3 id=&quot;物理层&quot;&gt;&lt;a href=&quot;#物理层&quot; class=&quot;headerlink
+        &lt;blockquote&gt;
+&lt;p&gt;sed全称是：Stream EDitor，通过名字可以看出是一种流式编辑器，可以实现查找、替换、删除功能。&lt;/p&gt;
+&lt;/blockquote&gt;
+
       
     
     </summary>
     
+      <category term="shell" scheme="http://blog.zhangyong.io/categories/shell/"/>
     
-      <category term="network" scheme="http://blog.zhangyong.io/tags/network/"/>
     
-      <category term="interview" scheme="http://blog.zhangyong.io/tags/interview/"/>
+      <category term="linux" scheme="http://blog.zhangyong.io/tags/linux/"/>
     
   </entry>
   
